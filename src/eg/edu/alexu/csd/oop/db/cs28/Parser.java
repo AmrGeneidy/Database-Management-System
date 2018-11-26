@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Parser {
     private int lastMatchedIndex;
-    static HashMap<returnType, Object> map;
+    HashMap<returnType, Object> map;
 
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
@@ -44,7 +44,7 @@ public class Parser {
                             map.put(returnType.COLNAME, colName);
                             map.put(returnType.COLTYPE, colType);
                         } else {
-                            map.put(returnType.NAME, s);
+                            return false;
                         }
                         map.put(returnType.ISDATABASE, false);
                         map.put(returnType.ISCREATE, true);
