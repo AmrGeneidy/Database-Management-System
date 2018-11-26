@@ -44,7 +44,7 @@ public class Parser {
                             map.put(returnType.COLNAME, colName);
                             map.put(returnType.COLTYPE, colType);
                         } else {
-                            map.put(returnType.NAME, s);
+                            return false;
                         }
                         map.put(returnType.ISDATABASE, false);
                         map.put(returnType.ISCREATE, true);
@@ -152,12 +152,8 @@ public class Parser {
 
         while (regexMatcher.find()) {
             isMatched = true;
-            if (regexMatcher.group().length() != 0) {
-                System.out.println(regexMatcher.group().trim());
-            }
-            System.out.println("Start Index :" + regexMatcher.start());
-            System.out.println("End Index :" + regexMatcher.end());
             lastMatchedIndex = regexMatcher.end();
+            break;
         }
         return isMatched;
     }
