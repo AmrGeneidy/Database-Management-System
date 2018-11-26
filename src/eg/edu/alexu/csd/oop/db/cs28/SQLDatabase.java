@@ -45,7 +45,7 @@ public class SQLDatabase implements Database {
     	if (!parser.executeStructureQuery(query)) {
 			throw new SQLException();
 		}
-    	HashMap<returnType, Object> map = Parser.map;
+    	HashMap<returnType, Object> map = parser.map;
     	if ((boolean)map.get(returnType.ISDATABASE)&&(boolean)map.get(returnType.ISCREATE)) {
 			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
 			dbDir.mkdirs();
