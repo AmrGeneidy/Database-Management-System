@@ -44,7 +44,7 @@ public class Parser {
                             map.put(returnType.COLNAME, colName);
                             map.put(returnType.COLTYPE, colType);
                         } else {
-                            map.put(returnType.NAME, s);
+                            return false;
                         }
                         map.put(returnType.ISDATABASE, false);
                         map.put(returnType.ISCREATE, true);
@@ -64,8 +64,23 @@ public class Parser {
         } else return false;
     }
 
-    public Object[][] executeQuery(String query) {
-        return new Object[0][];
+    public boolean executeQuery(String query) {
+        map = new HashMap<>();
+        if (regexChecker("SELECT", query)) {
+            String s = query.substring(lastMatchedIndex + 1);
+            String[] colCollector = s.split("FROM");
+            if (!colCollector[0].trim().equals("*")) {
+                String[] col = colCollector[0].split(",");
+                for (String c : col) c = c.trim();
+                if (col[0].replaceAll("\\s+", "").equals("")) return false;
+                map.put(returnType.COLNAME, col);
+            }
+            s = colCollector[1];
+            String[] collector = s.split("WHERE");
+            map.put(returnType.NAME, collector[0].trim());
+            conditionFinder(s, collector);
+        }
+        return true;
     }
 
     public boolean executeUpdateQuery(String query) {
@@ -114,7 +129,6 @@ public class Parser {
         if (matched) {
             return true;
         } else return false;
-
     }
 
     enum returnType {
@@ -138,12 +152,8 @@ public class Parser {
 
         while (regexMatcher.find()) {
             isMatched = true;
-            if (regexMatcher.group().length() != 0) {
-                System.out.println(regexMatcher.group().trim());
-            }
-            System.out.println("Start Index :" + regexMatcher.start());
-            System.out.println("End Index :" + regexMatcher.end());
             lastMatchedIndex = regexMatcher.end();
+            break;
         }
         return isMatched;
     }
@@ -174,9 +184,15 @@ public class Parser {
             for (String op : possibleOperators) {
                 if (condition.contains(op)) {
                     String[] operands = condition.split(op);
-                    for (String o : operands) o = o.trim();
+                    for (int i = 0; i < operands.length; i++) {
+                        Matcher matcher = Pattern.compile("[A-Za-z_]+").matcher(operands[i]);
+                        if (matcher.find()) {
+                            operands[i] = matcher.group().trim();
+                        }
+                    }
                     map.put(returnType.CONDITIONOPERATOR, op);
                     map.put(returnType.CONDITIONOPERANDS, operands);
+                    break;
                 }
             }
         }
