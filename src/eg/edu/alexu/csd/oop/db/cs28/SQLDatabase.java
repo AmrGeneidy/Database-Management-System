@@ -123,7 +123,6 @@ public class SQLDatabase implements Database {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(input);
 			doc.getDocumentElement().normalize();
-			// database name
 			// rows
 			NodeList rows = doc.getElementsByTagName("student");
 
