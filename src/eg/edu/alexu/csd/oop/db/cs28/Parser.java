@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 public class Parser {
     private int lastMatchedIndex;
-    HashMap<returnType, Object> map;
+    static HashMap<returnType, Object> map;
 
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
@@ -152,12 +152,8 @@ public class Parser {
 
         while (regexMatcher.find()) {
             isMatched = true;
-            if (regexMatcher.group().length() != 0) {
-                System.out.println(regexMatcher.group().trim());
-            }
-            System.out.println("Start Index :" + regexMatcher.start());
-            System.out.println("End Index :" + regexMatcher.end());
             lastMatchedIndex = regexMatcher.end();
+            break;
         }
         return isMatched;
     }
