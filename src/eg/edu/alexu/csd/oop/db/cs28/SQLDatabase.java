@@ -58,6 +58,8 @@ public class SQLDatabase implements Database {
 				file.delete();
 			}
 			return true;
+		}else if (currentDatabase==null) {
+			throw new SQLException();
 		}else if(!(boolean)map.get(returnType.ISDATABASE)&&!(boolean)map.get(returnType.ISCREATE)) {
 			new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".xml").delete();
 			new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".dtd").delete();
