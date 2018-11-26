@@ -116,6 +116,11 @@ public class SQLDatabase implements Database {
 
     @Override
     public Object[][] executeQuery(String query) throws SQLException {
+    	
+    	Parser parser = new Parser();
+    	parser.executeQuery(query);
+    	HashMap<returnType, Object> data = parser.map;
+    	Object[][] selected = null;
     	try {
 
 			File input = new File("demo.xml");
@@ -136,7 +141,7 @@ public class SQLDatabase implements Database {
 			// database name
 			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
 
-			String comparator = "firstname";
+			String comparator = "marks";
 			int actualRows = 0;
 
 			if (in.equals("*")) {
@@ -157,27 +162,55 @@ public class SQLDatabase implements Database {
 								if (n.getTagName().equals(comparator)) {
 									// conditions
 									switch (in) {
-									case "==":
+									case "=":
 										if (n.getTextContent().equals("dinkar")) {
 											check[i] = 1;
 											actualRows++;
 										}
 										break;
 									case ">":
+										int sample = Integer.parseInt(n.getTextContent());
+										int value = 90;
+										if(sample > value) {
+											check[i] = 1;
+											actualRows++;
+										}
 										break;
 									case "<":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 90;
+										if(sample < value) {
+											check[i] = 1;
+											actualRows++;
+										}
 										break;
 									case "<>":
-										break;
-									case "!=":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample == value) {
+											check[i] = 1;
+											actualRows++;
+										}
 										break;
 									case ">=":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample >= value) {
+											check[i] = 1;
+											actualRows++;
+										}
 										break;
 									case "<=":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample <= value) {
+											check[i] = 1;
+											actualRows++;
+										}
 										break;
-									case "=":
-										break;
-
+									default:
+										System.out.println("Not Found");
+										
 									}
 								}
 							}
@@ -185,8 +218,7 @@ public class SQLDatabase implements Database {
 					}
 				}
 			}
-
-			Object[][] selected = new Object[actualRows][numOfColumns];
+			selected = new Object[actualRows][numOfColumns];
 
 			int c = 0;
 			boolean flag = false;
@@ -237,7 +269,7 @@ public class SQLDatabase implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return new Object[0][];
+        return selected;
     }
 
     @Override
