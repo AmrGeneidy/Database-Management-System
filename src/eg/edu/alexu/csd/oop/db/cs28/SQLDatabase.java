@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
+
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,6 +37,7 @@ import org.w3c.dom.Element;
 
 
 public class SQLDatabase implements Database {
+
 	private String currentDatabase;
 
 	@Override
@@ -306,6 +308,20 @@ public class SQLDatabase implements Database {
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
-		return 0;
+		int rowsCount = 0;
+		Parser parser = new Parser();
+		if (!parser.executeUpdateQuery(query)) {
+			throw new SQLException();
+		}
+		HashMap<returnType, Object> map = parser.map;
+		if ((boolean)map.get(returnType.ISINSERT)) {
+			rowsCount = ModifyTable.insert(currentDatabase,map);
+		}else if ((boolean)map.get(returnType.ISUPDATE)) {
+			rowsCount = ModifyTable.update(currentDatabase,map);
+		}else if ((boolean)map.get(returnType.ISDELETE)) {
+			rowsCount = ModifyTable.delete(currentDatabase,map);
+		}
+	
+		return rowsCount;
 	}
 }
