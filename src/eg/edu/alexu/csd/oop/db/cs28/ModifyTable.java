@@ -1,6 +1,7 @@
 package eg.edu.alexu.csd.oop.db.cs28;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +12,12 @@ import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,25 +31,25 @@ public class ModifyTable {
 	public static int insert(String workSpacePath, HashMap<returnType, Object> map) {
 		//TODO method doesn't terminate when process fail 
 		boolean processFailed = false;
-		String tableName = (String) map.get(returnType.NAME);
-		String[] colNames;
+		String tableName = ((String) map.get(returnType.NAME)).toLowerCase();
+		Object[] colNames;
 		Object[] colValues = (Object[]) map.get(returnType.COLVALUES);
 
 		Item[] record = readDTD(
-				workSpacePath + workSpacePath + System.getProperty("file.separator") + tableName + ".dtd");
+				 workSpacePath + System.getProperty("file.separator") + tableName + ".dtd");
 		// couldn't read DTD file
 		if (record.length == 0) {
 			processFailed = true;
 		}
 
 		// All cols case
-		if (!map.containsKey(returnType.COLNAME)) {
+		if (((Object[])map.get(returnType.COLNAME)).length==0) {
 			if (record.length != colValues.length) {
 				processFailed = true;
 			} else {
 				for (int i = 0; i < record.length; i++) {
 					// check if Value is Integer or not TODO test this line
-					if (record[i].getDataType().equals("int") && !(colValues[i] instanceof Integer)) {
+					if (record[i].getDataType().equals("int") && !(Integer.valueOf(Integer.parseInt((String)(colValues[i]))) instanceof Integer)) {
 						processFailed = true;
 					} else {
 						record[i].setValue((String) colValues[i]);
@@ -51,16 +58,16 @@ public class ModifyTable {
 			}
 			// Some cols case
 		} else {
-			colNames = (String[]) map.get(returnType.COLNAME);
+			colNames = (Object[]) map.get(returnType.COLNAME);
 			if (colNames.length != colValues.length) {
 				processFailed = true;
 			} else {
 				// TODO not efficient
 				for (int colCount = 0; colCount < colNames.length; colCount++) {
 					for (int i = 0; i < record.length; i++) {
-						if (colNames[colCount].equals(record[i].getColName())) {
+						if (((String)colNames[colCount]).equals(record[i].getColName())) {
 							// check if Value is Integer or not TODO test this line (copied from above)
-							if (record[i].getDataType().equals("int") && !(colValues[colCount] instanceof Integer)) {
+							if (record[i].getDataType().equals("int") && !(Integer.valueOf(Integer.parseInt((String)colValues[colCount])) instanceof Integer)) {
 								processFailed = true;
 							} else {
 								record[i].setValue((String) colValues[colCount]);
@@ -82,7 +89,7 @@ public class ModifyTable {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(workSpacePath + System.getProperty("file.separator") + tableName + ".xml");
+			Document doc = builder.parse(new File(workSpacePath + System.getProperty("file.separator") + tableName + ".xml"));
 			Element root = doc.getDocumentElement();
 			// Check if file empty or not
 			if (root == null) {
@@ -98,12 +105,23 @@ public class ModifyTable {
 			}
 			root.appendChild(xmlRecord);
 			doc.appendChild(root);
+			
+	         TransformerFactory transformerFactory = TransformerFactory.newInstance();
+	         Transformer transformer = transformerFactory.newTransformer();
+	         DOMSource source = new DOMSource(doc);
+	         StreamResult result = new StreamResult(new File(workSpacePath + System.getProperty("file.separator") + tableName + ".xml"));
+	         transformer.transform(source, result);
+	         
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException | IOException e) {
 			// TODO table not found
 			processFailed = true;
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			//TODO error while writing into file
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -146,6 +164,6 @@ public class ModifyTable {
 			return null;
 		}
 
-		return (Item[]) column.toArray();
+		return  column.toArray(new Item[column.size()]);
 	}
 }

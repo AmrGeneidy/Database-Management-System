@@ -283,11 +283,11 @@ public class SQLDatabase implements Database {
 		}
 		HashMap<returnType, Object> map = parser.map;
 		if ((boolean)map.get(returnType.ISINSERT)) {
-			rowsCount = ModifyTable.insert(null/*workSpacePath*/,map);
+			rowsCount = ModifyTable.insert(currentDatabase,map);
 		}else if ((boolean)map.get(returnType.ISUPDATE)) {
-			rowsCount = ModifyTable.update(null/*workSpacePath*/,map);
+			rowsCount = ModifyTable.update(currentDatabase,map);
 		}else if ((boolean)map.get(returnType.ISDELETE)) {
-			rowsCount = ModifyTable.delete(null/*workSpacePath*/,map);
+			rowsCount = ModifyTable.delete(currentDatabase,map);
 		}
 	
 		return rowsCount;
