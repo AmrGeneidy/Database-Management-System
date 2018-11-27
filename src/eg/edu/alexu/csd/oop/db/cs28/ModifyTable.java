@@ -64,7 +64,7 @@ public class ModifyTable {
 				// TODO not efficient
 				for (int colCount = 0; colCount < colNames.length; colCount++) {
 					for (int i = 0; i < record.length; i++) {
-						if (((String)colNames[colCount]).equals(record[i].getColName())) {
+						if (((String)colNames[colCount]).equalsIgnoreCase(record[i].getColName())) {
 							// check if Value is Integer or not TODO test this line (copied from above)
 							if (record[i].getDataType().equals("int") && !(Integer.valueOf(Integer.parseInt((String)colValues[colCount])) instanceof Integer)) {
 								processFailed = true;
@@ -103,7 +103,6 @@ public class ModifyTable {
 				xmlRecord.appendChild(tag);
 			}
 			root.appendChild(xmlRecord);
-			doc.appendChild(root);
 			
 	         TransformerFactory transformerFactory = TransformerFactory.newInstance();
 	         Transformer transformer = transformerFactory.newTransformer();
