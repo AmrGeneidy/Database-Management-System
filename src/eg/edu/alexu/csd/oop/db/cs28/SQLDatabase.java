@@ -21,98 +21,129 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+
 public class SQLDatabase implements Database {
 	private String currentDatabase;
-    @Override
-    public String createDatabase(String databaseName, boolean dropIfExists) {
-    	databaseName = databaseName.toLowerCase(); 
-    	File db = new File(databaseName);
-    	if (db.exists()) {
+
+	@Override
+	public String createDatabase(String databaseName, boolean dropIfExists) {
+		databaseName = databaseName.toLowerCase();
+		File db = new File(databaseName);
+		if (db.exists()) {
 			if (dropIfExists) {
 				try {
-					executeStructureQuery("DROP DATABASE "+databaseName);
+					executeStructureQuery("DROP DATABASE " + databaseName);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			}
-			else 
+			} else
 				currentDatabase = databaseName;
-		}
-    	else {
-    		currentDatabase = databaseName;
-    		try {
-				executeStructureQuery("CREATE DATABASE "+databaseName);
+		} else {
+			currentDatabase = databaseName;
+			try {
+				executeStructureQuery("CREATE DATABASE " + databaseName);
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-    	}
-        return db.getAbsolutePath();
-    }
+		}
+		return db.getAbsolutePath();
+	}
 
-    @Override
-    public boolean executeStructureQuery(String query) throws SQLException {
-    	Parser parser = new Parser();
-    	if (!parser.executeStructureQuery(query)) {
+	@Override
+	public boolean executeStructureQuery(String query) throws SQLException {
+		Parser parser = new Parser();
+		if (!parser.executeStructureQuery(query)) {
 			throw new SQLException();
 		}
-    	HashMap<returnType, Object> map = parser.map;
-    	if ((boolean)map.get(returnType.ISDATABASE)&&(boolean)map.get(returnType.ISCREATE)) {
+		HashMap<returnType, Object> map = parser.map;
+		if ((boolean) map.get(returnType.ISDATABASE) && (boolean) map.get(returnType.ISCREATE)) {
 			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
 			dbDir.mkdirs();
 			currentDatabase = ((String) map.get(returnType.NAME)).toLowerCase();
 			return true;
-		}else if ((boolean)map.get(returnType.ISDATABASE)&&!(boolean)map.get(returnType.ISCREATE)) {
+		} else if ((boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
 			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
 			File[] listFiles = dbDir.listFiles();
-			for(File file : listFiles){
+			for (File file : listFiles) {
 				file.delete();
 			}
 			return true;
-		}else if (currentDatabase==null) {
+		} else if (currentDatabase == null) {
 			throw new SQLException();
-		}else if(!(boolean)map.get(returnType.ISDATABASE)&&!(boolean)map.get(returnType.ISCREATE)) {
-			new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".xml").delete();
-			new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".dtd").delete();
-		}else {
+		} else if (!(boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
+			new File(currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml").delete();
+			new File(currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd").delete();
+		} else {
 			try {
-				File x = new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".xml");
+				File x = new File(currentDatabase + System.getProperty("file.separator")
+						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml");
 				if (x.exists()) {
 					return false;
 				}
-				x.createNewFile();
-			} catch (IOException e) {
-				return false;
-			}
-			try {
-				new File(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".dtd").createNewFile();
+				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+				Document doc = dBuilder.newDocument();
+				 Element rootElement = doc.createElement(((String) map.get(returnType.NAME)).toLowerCase());
+		         doc.appendChild(rootElement);
+				// write the content into xml file
+				TransformerFactory transformerFactory = TransformerFactory.newInstance();
+				Transformer transformer = transformerFactory.newTransformer();
+				DOMSource source = new DOMSource(doc);
+				StreamResult result = new StreamResult(x);
+				transformer.transform(source, result);
 				@SuppressWarnings("resource")
-				PrintWriter writer= new PrintWriter(currentDatabase+ System.getProperty("file.separator")+((String) map.get(returnType.NAME)).toLowerCase()+".dtd");
+				PrintWriter writer = new PrintWriter(currentDatabase + System.getProperty("file.separator")
+						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd");
 				writer.print("<!ELEMENT row (");
-				String [] colName = (String[]) map.get(returnType.COLNAME);
+				String[] colName = (String[]) map.get(returnType.COLNAME);
 				for (int i = 0; i < colName.length; i++) {
 					if (i < colName.length - 1) {
-						writer.print(colName[i]+",");
+						writer.print(colName[i] + ",");
 					} else {
-						writer.println(colName[i]+")>");
+						writer.println(colName[i] + ")>");
 					}
 				}
-				String [] coltype = (String[]) map.get(returnType.COLTYPE);
+				String[] coltype = (String[]) map.get(returnType.COLTYPE);
 				for (int i = 0; i < colName.length; i++) {
-					writer.println("<!ELEMENT "+colName[i]+" "+coltype[i]+">");
+					writer.println("<!ELEMENT " + colName[i] + " " + coltype[i] + ">");
 				}
 				writer.close();
 			} catch (FileNotFoundException e) {
 				return false;
 			} catch (IOException e) {
+				return false;
+			} catch (TransformerConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransformerException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return true;
 		}
-        return false;
-    }
+		return false;
+	}
+
 
     @Override
     public Object[][] executeQuery(String query) throws SQLException {
@@ -272,8 +303,9 @@ public class SQLDatabase implements Database {
         return selected;
     }
 
-    @Override
-    public int executeUpdateQuery(String query) throws SQLException {
-        return 0;
-    }
+
+	@Override
+	public int executeUpdateQuery(String query) throws SQLException {
+		return 0;
+	}
 }
