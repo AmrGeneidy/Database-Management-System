@@ -16,6 +16,18 @@
       <firstname>jasvir</firstname>
       <lastname>singn</lastname>
       <nickname>jazz</nickname>
-      <marks>95</marks>
+      <marks>90</marks>
+   </student>
+   <student rollno = "593">
+      <firstname>jasvir</firstname>
+      <lastname>singn</lastname>
+      <nickname>jazz</nickname>
+      <marks>80</marks>
+   </student>
+   <student rollno = "593">
+      <firstname>jasvir</firstname>
+      <lastname>singn</lastname>
+      <nickname>jazz</nickname>
+      <marks>70</marks>
    </student>
 </class>
