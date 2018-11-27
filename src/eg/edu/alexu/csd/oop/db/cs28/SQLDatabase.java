@@ -10,6 +10,18 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import java.util.Scanner;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +37,7 @@ import org.w3c.dom.Element;
 
 
 public class SQLDatabase implements Database {
+
 	private String currentDatabase;
 
 	@Override
@@ -133,13 +146,182 @@ public class SQLDatabase implements Database {
 		return false;
 	}
 
-	@Override
-	public Object[][] executeQuery(String query) throws SQLException {
-		return new Object[0][];
-	}
+
+    @Override
+    public Object[][] executeQuery(String query) throws SQLException {
+    	
+    	Parser parser = new Parser();
+    	parser.executeQuery(query);
+    	HashMap<returnType, Object> data = parser.map;
+    	Object[][] selected = null;
+    	try {
+
+			File input = new File("demo.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(input);
+			doc.getDocumentElement().normalize();
+			// rows
+			NodeList rows = doc.getElementsByTagName("student");
+
+			Scanner s = new Scanner(System.in);
+			String in = s.nextLine();
+
+			int numOfColumns = 4;
+
+			byte[] check = new byte[rows.getLength()];
+
+			// database name
+			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
+
+			String comparator = "marks";
+			int actualRows = 0;
+
+			if (in.equals("*")) {
+				for (int i = 0; i < check.length; i++) {
+					check[i] = 1;
+					actualRows++;
+				}
+			} else {
+				for (int i = 0; i < check.length; i++) {
+					Node p = rows.item(i);
+					if (p.getNodeType() == Node.ELEMENT_NODE) {
+						Element e = (Element) p;
+						NodeList columns = e.getChildNodes();
+						for (int j = 1; j < columns.getLength(); j += 2) {
+							Node content = columns.item(j);
+							if (content.getNodeType() == Node.ELEMENT_NODE) {
+								Element n = (Element) content;
+								if (n.getTagName().equals(comparator)) {
+									// conditions
+									switch (in) {
+									case "=":
+										if (n.getTextContent().equals("dinkar")) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									case ">":
+										int sample = Integer.parseInt(n.getTextContent());
+										int value = 90;
+										if(sample > value) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									case "<":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 90;
+										if(sample < value) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									case "<>":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample == value) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									case ">=":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample >= value) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									case "<=":
+										sample = Integer.parseInt(n.getTextContent());
+										value = 95;
+										if(sample <= value) {
+											check[i] = 1;
+											actualRows++;
+										}
+										break;
+									default:
+										System.out.println("Not Found");
+										
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			selected = new Object[actualRows][numOfColumns];
+
+			int c = 0;
+			boolean flag = false;
+			for (int j = 0; j < rows.getLength(); j++) {
+				flag = false;
+				// get the first row as a node
+				Node p = rows.item(j);
+				if (p.getNodeType() == Node.ELEMENT_NODE) {
+					Element e = (Element) p;
+					// id of the first node
+					String id = e.getAttribute("id");
+					// the first row cells
+					NodeList columns = e.getChildNodes();
+					for (int i = 1, k = 0; i < columns.getLength(); i += 2, k++) {
+						// cell as a node
+						Node content = columns.item(i);
+						if (content.getNodeType() == Node.ELEMENT_NODE) {
+							// n is a cell in the row
+							Element n = (Element) content;
+							if (check[j] == 1) {
+								selected[c][k] = n.getTextContent();
+								flag = true;
+							}
+						}
+					}
+					if (flag) {
+						c++;
+					}
+
+				}
+			}
+
+			for (int i = 0; i < selected.length; i++) {
+				for (int j = 0; j < numOfColumns; j++) {
+					System.out.print(selected[i][j] + "	");
+				}
+				System.out.println();
+
+			}
+
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        return selected;
+    }
+
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
-		return 0;
+		int rowsCount = 0;
+		Parser parser = new Parser();
+		if (!parser.executeUpdateQuery(query)) {
+			throw new SQLException();
+		}
+		HashMap<returnType, Object> map = parser.map;
+		if ((boolean)map.get(returnType.ISINSERT)) {
+			rowsCount = ModifyTable.insert(currentDatabase,map);
+		}else if ((boolean)map.get(returnType.ISUPDATE)) {
+			rowsCount = ModifyTable.update(currentDatabase,map);
+		}else if ((boolean)map.get(returnType.ISDELETE)) {
+			rowsCount = ModifyTable.delete(currentDatabase,map);
+		}
+	
+		return rowsCount;
 	}
 }
