@@ -10,7 +10,7 @@ public class Main {
 		d.createDatabase("Customers", false);
 		
 		try {
-			d.executeQuery("SELECT * FROM Customers");
+			d.executeQuery("SELECT marks,firstname,nicknameFROM demo WHERE marks>=85");
 			
 			
 			

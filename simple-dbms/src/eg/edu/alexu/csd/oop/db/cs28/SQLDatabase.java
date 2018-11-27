@@ -192,7 +192,14 @@ public class SQLDatabase implements Database {
 				}
 					
 			}
-			else if(columnsArray == null && conditionOperands != null) {
+			else if(conditionOperands != null) {
+				if(columnsArray == null) {
+					for (int i = 0; i < checkColumn.length; i++) {
+						checkColumn[i] = 1;
+						actualcolumns++;
+				}
+				}
+				
 				String firstComparator = conditionOperands[0];
 				String secondComparator = conditionOperands[1];
 				
@@ -212,10 +219,22 @@ public class SQLDatabase implements Database {
 					if (p.getNodeType() == Node.ELEMENT_NODE) {
 						Element e = (Element) p;
 						NodeList columns = e.getChildNodes();
-						for (int j = 1; j < columns.getLength(); j += 2) {
+						for (int j = 1, k = 0; j < columns.getLength(); j += 2, k++) {
 							Node content = columns.item(j);
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								Element n = (Element) content;
+								
+								for(int v = 0; v < columnsArray.length; v++) {
+									String s = n.getTagName();
+									if(s.equals(columnsArray[v])) {
+										if(checkColumn[k] == 0) {
+											actualcolumns++;
+										}
+										checkColumn[k] = 1;
+										break;
+									}
+								}
+								
 								
 								if (n.getTagName().equals(firstComparator)) {
 									// conditions
@@ -295,10 +314,10 @@ public class SQLDatabase implements Database {
 								for(int v = 0; v < columnsArray.length; v++) {
 									String s = n.getTagName();
 									if(s.equals(columnsArray[v])) {
-										if(checkColumn[v] == 0) {
+										if(checkColumn[k] == 0) {
 											actualcolumns++;
 										}
-										checkColumn[v] = 1;
+										checkColumn[k] = 1;
 										break;
 									}
 								}
@@ -306,6 +325,16 @@ public class SQLDatabase implements Database {
 						}
 					}
 				}
+			}
+			else if(columnsArray != null && conditionOperands != null) {
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 			
 			selected = new Object[actualRows][actualcolumns];
@@ -321,7 +350,7 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 1, k = 0; i < columns.getLength(); i += 2, k++) {
+					for (int i = 1, k = 0, g = 0; i < columns.getLength(); i += 2, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
@@ -329,7 +358,8 @@ public class SQLDatabase implements Database {
 							Element n = (Element) content;
 							if (checkRow[j] == 1 && checkColumn[k] == 1) {
 								if(!n.getTextContent().equals("")) {
-									selected[c][k] = n.getTextContent();
+									selected[c][g] = n.getTextContent();
+									g++;
 								}
 								flag = true;
 							}
@@ -345,6 +375,7 @@ public class SQLDatabase implements Database {
 				for (int j = 0; j < actualcolumns; j++) {
 					System.out.print(selected[i][j] + "	");
 				}
+				System.out.println();
 
 			}
 
