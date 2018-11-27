@@ -345,7 +345,6 @@ public class SQLDatabase implements Database {
 				for (int j = 0; j < actualcolumns; j++) {
 					System.out.print(selected[i][j] + "	");
 				}
-				System.out.println();
 
 			}
 
