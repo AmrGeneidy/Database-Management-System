@@ -226,7 +226,7 @@ public class SQLDatabase implements Database {
 					if (p.getNodeType() == Node.ELEMENT_NODE) {
 						Element e = (Element) p;
 						NodeList columns = e.getChildNodes();
-						for (int j = 1, k = 0; j < columns.getLength(); j += 2, k++) {
+						for (int j = 0, k = 0; j < columns.getLength(); j ++, k++) {
 							Node content = columns.item(j);
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								Element n = (Element) content;
