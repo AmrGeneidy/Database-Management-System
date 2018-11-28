@@ -153,7 +153,7 @@ public class SQLDatabase implements Database {
     	Parser parser = new Parser();
     	parser.executeQuery(query);
     	HashMap<returnType, Object> data = parser.map;
-    	int numOfColumns = 4;
+    	
     	String [] columnsArray = (String[]) data.get(returnType.COLNAME);
     	String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
     	String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
@@ -161,25 +161,30 @@ public class SQLDatabase implements Database {
     	int actualRows = 0;
 		int actualcolumns = 0;
 		byte[] checkRow;
-    	byte[] checkColumn = new byte[numOfColumns];
+    	
     	
     	Object[][] selected = null;
     	try {
-			File input = new File("demo.xml");
+    		File x = new File(currentDatabase + System.getProperty("file.separator")
+			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+    		
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(input);
+			Document doc = dBuilder.parse(x);
 			doc.getDocumentElement().normalize();
 			// rows
-			NodeList rows = doc.getElementsByTagName("student");
+			NodeList rows = doc.getElementsByTagName("record");
 
+			Item[] col = ModifyTable.readDTD(currentDatabase + System.getProperty("file.separator")
+			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".dtd");
+			
 			checkRow = new byte[rows.getLength()];
-
+			int numOfColumns = col.length;
 			// database name
 			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
 
 			
-			
+			byte[] checkColumn = new byte[numOfColumns];
 
 			if (columnsArray == null && conditionOperands == null) {
 				//no condition
@@ -227,7 +232,7 @@ public class SQLDatabase implements Database {
 								if(!(columnsArray == null)) {
 									for(int v = 0; v < columnsArray.length; v++) {
 										String s = n.getTagName();
-										if(s.equals(columnsArray[v])) {
+										if(s.equalsIgnoreCase(columnsArray[v])) {
 											if(checkColumn[k] == 0) {
 												actualcolumns++;
 											}
@@ -237,7 +242,7 @@ public class SQLDatabase implements Database {
 									}
 								}
 								
-								if (n.getTagName().equals(firstComparator)) {
+								if (n.getTagName().equalsIgnoreCase(firstComparator)) {
 									// conditions
 									switch (conditionOprtator) {
 									case "=":
@@ -314,7 +319,7 @@ public class SQLDatabase implements Database {
 								
 								for(int v = 0; v < columnsArray.length; v++) {
 									String s = n.getTagName();
-									if(s.equals(columnsArray[v])) {
+									if(s.equalsIgnoreCase(columnsArray[v])) {
 										if(checkColumn[k] == 0) {
 											actualcolumns++;
 										}
