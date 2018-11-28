@@ -13,21 +13,19 @@ public class Parser {
         boolean matched = false;
         map = new HashMap<>();
         if (regexChecker("CREATE[\\s]+DATABASE", query)) {
-            String s = query.substring(lastMatchedIndex + 1);
-            s = s.trim();
+            String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, true);
             map.put(returnType.ISCREATE, true);
             map.put(returnType.NAME, s);
             matched = true;
         } else if (regexChecker("DROP[\\s]+DATABASE", query)) {
-            String s = query.substring(lastMatchedIndex + 1);
-            s = s.trim();
+            String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, true);
             map.put(returnType.ISCREATE, false);
             map.put(returnType.NAME, s);
             matched = true;
         } else if (regexChecker("CREATE[\\s]+TABLE", query)) {
-            String s = query.substring(lastMatchedIndex + 1);
+            String s = query.substring(lastMatchedIndex + 1).trim();
             if (s.indexOf('(') != -1) {
                 map.put(returnType.NAME, s.substring(0, s.indexOf('(')));
                 s = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
@@ -48,8 +46,7 @@ public class Parser {
             map.put(returnType.ISCREATE, true);
             matched = true;
         } else if (regexChecker("DROP[\\s]+TABLE", query)) {
-            String s = query.substring(lastMatchedIndex + 1);
-            s = s.trim();
+            String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, false);
             map.put(returnType.ISCREATE, false);
             map.put(returnType.NAME, s);
