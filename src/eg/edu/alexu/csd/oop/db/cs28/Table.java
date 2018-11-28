@@ -24,7 +24,6 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
-//Cache cleared when we change the table we work on OR close the program 
 public class Table {
 
 	private static Table singleTable;
@@ -48,6 +47,55 @@ public class Table {
 		tableFullPathDTD = getDTDPath();
 		loadData();
 		return singleTable;
+	}
+
+	//MUST be called before finishing any method
+	public void save() {
+		saveDataInXML();
+	}
+	
+	// save the data from table(cache) in xml file
+	private static void saveDataInXML() {
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			File file = new File(tableFullPathXML);
+			Document doc = builder.parse(file);
+			doc.getDocumentElement().normalize();
+			Element root = doc.getDocumentElement();
+			
+			while (root.hasChildNodes()) {
+		        root.removeChild(root.getFirstChild());
+			}
+			
+			Element xmlRecord;
+			for (Record record : tableData) {
+				xmlRecord = doc.createElement("record");
+				for (int i = 0; i < record.length(); i++) {
+					Element tag = doc.createElement(record.getItem(i).getColName());
+					Text value = doc.createTextNode(record.getItem(i).getValue());
+					tag.appendChild(value);
+					xmlRecord.appendChild(tag);
+				}
+				root.appendChild(xmlRecord);
+			}
+			file.delete();
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(tableFullPathXML));
+			transformer.transform(source, result);
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException | IOException e) {
+			// TODO table not found
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO error while writing into file
+			e.printStackTrace();
+		}
+
 	}
 
 	// fill colsNames & colsDataTypes
@@ -92,7 +140,7 @@ public class Table {
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node nNode = nList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					for(int j = 0; j < colsNames.length; j++) {
+					for (int j = 0; j < colsNames.length; j++) {
 						Element eElement = (Element) nNode;
 						String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
 						Item x = new Item(colsNames[j], colsDataTypes[j], value);
@@ -105,43 +153,6 @@ public class Table {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	// save the data from table(cache) in xml file
-	public static void saveDataInXML() {
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new File(tableFullPathXML));
-			doc.getDocumentElement().normalize();
-			Element root = doc.getDocumentElement();
-			Element xmlRecord;
-			for (Record record : tableData) {
-				xmlRecord = doc.createElement("record");
-				for (int i = 0; i < record.length(); i++) {
-					Element tag = doc.createElement(record.getItem(i).getColName());
-					Text value = doc.createTextNode(record.getItem(i).getValue());
-					tag.appendChild(value);
-					xmlRecord.appendChild(tag);
-				}
-				root.appendChild(xmlRecord);
-			}
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(tableFullPathXML));
-			transformer.transform(source, result);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException | IOException e) {
-			// TODO table not found
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO error while writing into file
-			e.printStackTrace();
-		}
-
 	}
 
 	private static String getDTDPath() {
