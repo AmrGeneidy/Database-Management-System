@@ -140,7 +140,7 @@ public class ModifyTable {
 		return 0;
 	}
 
-	private static Item[] readDTD(String path) {
+	public static Item[] readDTD(String path) {
 		BufferedReader reader = null;
 		Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
 		Matcher matcher = null;

@@ -148,96 +148,141 @@ public class SQLDatabase implements Database {
 
 
     @Override
-    public Object[][] executeQuery(String query) throws SQLException {
+ public Object[][] executeQuery(String query) throws SQLException {
     	
     	Parser parser = new Parser();
     	parser.executeQuery(query);
     	HashMap<returnType, Object> data = parser.map;
+    	
+    	String [] columnsArray = (String[]) data.get(returnType.COLNAME);
+    	String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
+    	String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
+    	int value = 0;
+    	int actualRows = 0;
+		int actualcolumns = 0;
+		byte[] checkRow;
+    	
+    	
     	Object[][] selected = null;
     	try {
-
-			File input = new File("demo.xml");
+    		File x = new File(currentDatabase + System.getProperty("file.separator")
+			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+    		
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(input);
+			Document doc = dBuilder.parse(x);
 			doc.getDocumentElement().normalize();
 			// rows
-			NodeList rows = doc.getElementsByTagName("student");
+			NodeList rows = doc.getElementsByTagName("record");
 
-			Scanner s = new Scanner(System.in);
-			String in = s.nextLine();
-
-			int numOfColumns = 4;
-
-			byte[] check = new byte[rows.getLength()];
-
+			Item[] col = ModifyTable.readDTD(currentDatabase + System.getProperty("file.separator")
+			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".dtd");
+			
+			checkRow = new byte[rows.getLength()];
+			int numOfColumns = col.length;
 			// database name
 			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
 
-			String comparator = "marks";
-			int actualRows = 0;
+			
+			byte[] checkColumn = new byte[numOfColumns];
 
-			if (in.equals("*")) {
-				for (int i = 0; i < check.length; i++) {
-					check[i] = 1;
-					actualRows++;
+			if (columnsArray == null && conditionOperands == null) {
+				//no condition
+					for (int i = 0; i < checkRow.length; i++) {
+						checkRow[i] = 1;
+						actualRows++;
 				}
-			} else {
-				for (int i = 0; i < check.length; i++) {
+					for (int i = 0; i < checkColumn.length; i++) {
+						checkColumn[i] = 1;
+						actualcolumns++;
+				}
+					
+			}
+			else if(conditionOperands != null) {
+				if(columnsArray == null) {
+					for (int i = 0; i < checkColumn.length; i++) {
+						checkColumn[i] = 1;
+						actualcolumns++;
+				}
+				}
+				
+				String firstComparator = conditionOperands[0];
+				String secondComparator = conditionOperands[1];
+				
+				boolean isNum = true;
+				 for (char c : secondComparator.toCharArray())
+				    {
+				        if (!Character.isDigit(c)) {
+				        	isNum = false;
+				        }
+				    }
+				 if(isNum) {
+					 value = Integer.parseInt(secondComparator);
+				 }
+				
+				for (int i = 0; i < checkRow.length; i++) {
 					Node p = rows.item(i);
 					if (p.getNodeType() == Node.ELEMENT_NODE) {
 						Element e = (Element) p;
 						NodeList columns = e.getChildNodes();
-						for (int j = 1; j < columns.getLength(); j += 2) {
+						for (int j = 1, k = 0; j < columns.getLength(); j += 2, k++) {
 							Node content = columns.item(j);
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								Element n = (Element) content;
-								if (n.getTagName().equals(comparator)) {
+								if(!(columnsArray == null)) {
+									for(int v = 0; v < columnsArray.length; v++) {
+										String s = n.getTagName();
+										if(s.equalsIgnoreCase(columnsArray[v])) {
+											if(checkColumn[k] == 0) {
+												actualcolumns++;
+											}
+											checkColumn[k] = 1;
+											break;
+										}
+									}
+								}
+								
+								if (n.getTagName().equalsIgnoreCase(firstComparator)) {
 									// conditions
-									switch (in) {
+									switch (conditionOprtator) {
 									case "=":
-										if (n.getTextContent().equals("dinkar")) {
-											check[i] = 1;
+										if (n.getTextContent().equals(conditionOperands[1])) {
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case ">":
 										int sample = Integer.parseInt(n.getTextContent());
-										int value = 90;
 										if(sample > value) {
-											check[i] = 1;
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<":
 										sample = Integer.parseInt(n.getTextContent());
-										value = 90;
 										if(sample < value) {
-											check[i] = 1;
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<>":
 										sample = Integer.parseInt(n.getTextContent());
-										value = 95;
-										if(sample == value) {
-											check[i] = 1;
+										if(sample != value) {
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case ">=":
 										sample = Integer.parseInt(n.getTextContent());
-										value = 95;
 										if(sample >= value) {
-											check[i] = 1;
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<=":
 										sample = Integer.parseInt(n.getTextContent());
-										value = 95;
 										if(sample <= value) {
-											check[i] = 1;
+											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
@@ -251,8 +296,44 @@ public class SQLDatabase implements Database {
 					}
 				}
 			}
-			selected = new Object[actualRows][numOfColumns];
-
+			else if(columnsArray != null && conditionOperands == null) {
+				for (int i = 0; i < checkRow.length; i++) {
+					checkRow[i] = 1;
+					actualRows++;
+			}
+				for (int j = 0; j < rows.getLength(); j++) {
+					// get the first row as a node
+					Node p = rows.item(j);
+					if (p.getNodeType() == Node.ELEMENT_NODE) {
+						Element e = (Element) p;
+						// id of the first node
+						String id = e.getAttribute("id");
+						// the first row cells
+						NodeList columns = e.getChildNodes();
+						for (int i = 1, k = 0; i < columns.getLength(); i += 2, k++) {
+							// cell as a node
+							Node content = columns.item(i);
+							if (content.getNodeType() == Node.ELEMENT_NODE) {
+								// n is a cell in the row
+								Element n = (Element) content;
+								
+								for(int v = 0; v < columnsArray.length; v++) {
+									String s = n.getTagName();
+									if(s.equalsIgnoreCase(columnsArray[v])) {
+										if(checkColumn[k] == 0) {
+											actualcolumns++;
+										}
+										checkColumn[k] = 1;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			selected = new Object[actualRows][actualcolumns];
 			int c = 0;
 			boolean flag = false;
 			for (int j = 0; j < rows.getLength(); j++) {
@@ -265,14 +346,17 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 1, k = 0; i < columns.getLength(); i += 2, k++) {
+					for (int i = 1, k = 0, g = 0; i < columns.getLength(); i += 2, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
 							// n is a cell in the row
 							Element n = (Element) content;
-							if (check[j] == 1) {
-								selected[c][k] = n.getTextContent();
+							if (checkRow[j] == 1 && checkColumn[k] == 1) {
+								if(!n.getTextContent().equals("")) {
+									selected[c][g] = n.getTextContent();
+									g++;
+								}
 								flag = true;
 							}
 						}
@@ -280,12 +364,11 @@ public class SQLDatabase implements Database {
 					if (flag) {
 						c++;
 					}
-
 				}
 			}
 
 			for (int i = 0; i < selected.length; i++) {
-				for (int j = 0; j < numOfColumns; j++) {
+				for (int j = 0; j < actualcolumns; j++) {
 					System.out.print(selected[i][j] + "	");
 				}
 				System.out.println();
@@ -304,7 +387,6 @@ public class SQLDatabase implements Database {
 		}
         return selected;
     }
-
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
