@@ -19,6 +19,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
@@ -78,8 +80,31 @@ public class Table {
 
 	private static void loadData() {
 		readDTD();
-		//TODO
-
+		try {
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder;
+			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(new File(tableFullPathXML));
+			doc.getDocumentElement().normalize();
+			NodeList nList = doc.getElementsByTagName("record");
+			tableData = new Record[nList.getLength()];
+			Item[] record = new Item[colsNames.length];
+			for (int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					for(int j = 0; j < colsNames.length; j++) {
+						Element eElement = (Element) nNode;
+						String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
+						Item x = new Item(colsNames[j], colsDataTypes[j], value);
+						record[j] = x;
+					}
+					tableData[i] = new Record(record);
+				}
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// save the data from table(cache) in xml file
@@ -88,6 +113,7 @@ public class Table {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			Document doc = builder.parse(new File(tableFullPathXML));
+			doc.getDocumentElement().normalize();
 			Element root = doc.getDocumentElement();
 			Element xmlRecord;
 			for (Record record : tableData) {
