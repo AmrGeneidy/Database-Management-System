@@ -160,6 +160,7 @@ public class SQLDatabase implements Database {
     	int value = 0;
     	int actualRows = 0;
 		int actualcolumns = 0;
+		byte[] checkRow;
     	byte[] checkColumn = new byte[numOfColumns];
     	
     	Object[][] selected = null;
@@ -172,7 +173,7 @@ public class SQLDatabase implements Database {
 			// rows
 			NodeList rows = doc.getElementsByTagName("student");
 
-			byte[] checkRow = new byte[rows.getLength()];
+			checkRow = new byte[rows.getLength()];
 
 			// database name
 			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
@@ -223,18 +224,18 @@ public class SQLDatabase implements Database {
 							Node content = columns.item(j);
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								Element n = (Element) content;
-								
-								for(int v = 0; v < columnsArray.length; v++) {
-									String s = n.getTagName();
-									if(s.equals(columnsArray[v])) {
-										if(checkColumn[k] == 0) {
-											actualcolumns++;
+								if(!(columnsArray == null)) {
+									for(int v = 0; v < columnsArray.length; v++) {
+										String s = n.getTagName();
+										if(s.equals(columnsArray[v])) {
+											if(checkColumn[k] == 0) {
+												actualcolumns++;
+											}
+											checkColumn[k] = 1;
+											break;
 										}
-										checkColumn[k] = 1;
-										break;
 									}
 								}
-								
 								
 								if (n.getTagName().equals(firstComparator)) {
 									// conditions
@@ -325,16 +326,6 @@ public class SQLDatabase implements Database {
 						}
 					}
 				}
-			}
-			else if(columnsArray != null && conditionOperands != null) {
-				
-				
-				
-				
-				
-				
-				
-				
 			}
 			
 			selected = new Object[actualRows][actualcolumns];
