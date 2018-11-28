@@ -48,6 +48,7 @@ public class SQLDatabase implements Database {
 			if (dropIfExists) {
 				try {
 					executeStructureQuery("DROP DATABASE " + databaseName);
+					executeStructureQuery("CREATE DATABASE " + databaseName);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -83,6 +84,7 @@ public class SQLDatabase implements Database {
 			for (File file : listFiles) {
 				file.delete();
 			}
+			dbDir.delete();
 			return true;
 		} else if (currentDatabase == null) {
 			throw new SQLException();
