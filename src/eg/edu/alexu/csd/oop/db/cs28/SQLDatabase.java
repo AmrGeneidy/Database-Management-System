@@ -109,7 +109,7 @@ public class SQLDatabase implements Database {
 				DOMSource source = new DOMSource(doc);
 				StreamResult result = new StreamResult(x);
 				transformer.transform(source, result);
-				@SuppressWarnings("resource")
+				@SuppressWarnings("resource") 
 				PrintWriter writer = new PrintWriter(currentDatabase + System.getProperty("file.separator")
 						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd");
 				writer.print("<!ELEMENT row (");
