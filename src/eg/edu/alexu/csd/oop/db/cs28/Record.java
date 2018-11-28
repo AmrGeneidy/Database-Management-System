@@ -1,8 +1,8 @@
 package eg.edu.alexu.csd.oop.db.cs28;
 
 public class Record {
-	private Item[] record;
-	public Record(Item[] record) {
+	private String[] record;
+	public Record(String[] record) {
 		this.record = record;
 	}
 	
@@ -10,7 +10,7 @@ public class Record {
 		return record.length;
 	}
 	
-	public Item getItem(int index) {
+	public String getItem(int index) {
 		return record[index];
 	}
 	

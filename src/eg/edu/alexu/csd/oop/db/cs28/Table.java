@@ -42,6 +42,9 @@ public class Table {
 		if (singleTable != null) {
 			saveDataInXML();
 		}
+		if (tableFullPathXML != null && xmlPath.equalsIgnoreCase(tableFullPathXML)) {
+			return singleTable;
+		}
 		singleTable = new Table();
 		tableFullPathXML = xmlPath;
 		tableFullPathDTD = getDTDPath();
@@ -49,11 +52,34 @@ public class Table {
 		return singleTable;
 	}
 
-	//MUST be called before finishing any method
+	//setters & getters
+	public Record[] getTableData() {
+		return tableData;
+	}
+
+	public void setTableData(Record[] tableData) {
+		Table.tableData = tableData;
+	}
+
+	public String[] getColsNames() {
+		return colsNames;
+	}
+
+	public String[] getColsDataTypes() {
+		return colsDataTypes;
+	}
+	
+	
+
+	// MUST be called before finishing any method
 	public void save() {
 		saveDataInXML();
 	}
-	
+
+	public int insert(String[] colNames, String[] values) {
+		return ModifyTable.insert(singleTable, colNames, values);
+	}
+
 	// save the data from table(cache) in xml file
 	private static void saveDataInXML() {
 		try {
@@ -63,17 +89,17 @@ public class Table {
 			Document doc = builder.parse(file);
 			doc.getDocumentElement().normalize();
 			Element root = doc.getDocumentElement();
-			
+
 			while (root.hasChildNodes()) {
-		        root.removeChild(root.getFirstChild());
+				root.removeChild(root.getFirstChild());
 			}
-			
+
 			Element xmlRecord;
 			for (Record record : tableData) {
 				xmlRecord = doc.createElement("record");
 				for (int i = 0; i < record.length(); i++) {
-					Element tag = doc.createElement(record.getItem(i).getColName());
-					Text value = doc.createTextNode(record.getItem(i).getValue());
+					Element tag = doc.createElement(colsNames[i]);
+					Text value = doc.createTextNode(record.getItem(i));
 					tag.appendChild(value);
 					xmlRecord.appendChild(tag);
 				}
@@ -120,7 +146,7 @@ public class Table {
 			colsDataTypes = dataTypes.toArray(new String[dataTypes.size()]);
 			reader.close();
 		} catch (IOException e) {
-			// TODO DTD not found return null
+			// TODO DTD not found
 			System.out.println("DTD file not found");
 			e.printStackTrace();
 		}
@@ -136,15 +162,14 @@ public class Table {
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("record");
 			tableData = new Record[nList.getLength()];
-			Item[] record = new Item[colsNames.length];
+			String[] record = new String[colsNames.length];
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node nNode = nList.item(i);
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					for (int j = 0; j < colsNames.length; j++) {
 						Element eElement = (Element) nNode;
 						String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
-						Item x = new Item(colsNames[j], colsDataTypes[j], value);
-						record[j] = x;
+						record[j] = value;
 					}
 					tableData[i] = new Record(record);
 				}

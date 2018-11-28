@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import java.util.Scanner;
@@ -391,13 +392,22 @@ public class SQLDatabase implements Database {
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
 		int rowsCount = 0;
+		Table table;
 		Parser parser = new Parser();
 		if (!parser.executeUpdateQuery(query)) {
 			throw new SQLException();
 		}
 		HashMap<returnType, Object> map = parser.map;
 		if ((boolean)map.get(returnType.ISINSERT)) {
-			rowsCount = ModifyTable.insert(currentDatabase,map);
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+			+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			Object[] ob1 = (Object[]) map.get(returnType.COLNAME);
+			Object[] ob2 = (Object[]) map.get(returnType.COLVALUES);
+			String[] colNames = Arrays.copyOf(ob1, ob1.length, String[].class);
+			String[] values = Arrays.copyOf(ob2, ob2.length, String[].class);
+			rowsCount = table.insert(colNames, values);
+			table.save();
 		}else if ((boolean)map.get(returnType.ISUPDATE)) {
 			rowsCount = ModifyTable.update(currentDatabase,map);
 		}else if ((boolean)map.get(returnType.ISDELETE)) {
