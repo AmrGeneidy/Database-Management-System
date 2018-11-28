@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,7 +28,63 @@ import eg.edu.alexu.csd.oop.db.cs28.Parser.returnType;
 
 public class ModifyTable {
 
-	public static int insert(String workSpacePath, HashMap<returnType, Object> map) {
+	
+	public static int insert(Table table,String[] colNames, String[] values) {
+		//TODO method doesn't terminate when process fail 
+		boolean processFailed = false;
+		boolean allColsCase = false;
+		if (colNames.length == 0) {
+			colNames = table.getColsNames();
+			allColsCase = true;
+		}
+		if(colNames.length != values.length) {
+			processFailed = true;
+		}
+
+		String[] itemsRow = new String[colNames.length];
+		String[] dataTypes =  table.getColsDataTypes();
+		if(allColsCase) {
+			for (int i = 0; i < itemsRow.length; i++) {
+				// check if Value is Integer or not TODO test this line
+				if (dataTypes[i].equals("int") && !(Integer.valueOf(Integer.parseInt(values[i])) instanceof Integer)) {
+					processFailed = true;
+				} else {
+					itemsRow[i] = values[i];
+				}
+			}
+		}else {
+			// TODO not efficient
+			for(int i = 0; i < table.getColsNames().length; i++) {
+				for (int inputCount = 0; inputCount < colNames.length; inputCount++) {
+					if (table.getColsNames()[i].equalsIgnoreCase(colNames[inputCount])) {
+						if (dataTypes[i].equals("int") && !(Integer.valueOf(Integer.parseInt(values[inputCount])) instanceof Integer)) {
+							processFailed = true;
+						} else {
+							itemsRow[i] = values[inputCount];
+							break;
+						}
+					}else {
+						//TODO empty or null ?!
+						itemsRow[i] = "";
+
+					}
+				}
+			}
+		}
+		
+		if (processFailed) {
+			return 0;
+		}
+		
+		ArrayList<Record> temp = new ArrayList<>(Arrays.asList(table.getTableData()));
+		temp.add(new Record(itemsRow));
+		table.setTableData(temp.toArray(new Record[temp.size()]));
+		return 1;	
+	}
+	
+	
+	//Duplicated Delete it 
+	private static int oldInsert(String workSpacePath, HashMap<returnType, Object> map) {
 		//TODO method doesn't terminate when process fail 
 		boolean processFailed = false;
 		String tableName = ((String) map.get(returnType.NAME)).toLowerCase();
@@ -140,7 +197,7 @@ public class ModifyTable {
 		return 0;
 	}
 
-	private static Item[] readDTD(String path) {
+	public static Item[] readDTD(String path) {
 		BufferedReader reader = null;
 		Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
 		Matcher matcher = null;

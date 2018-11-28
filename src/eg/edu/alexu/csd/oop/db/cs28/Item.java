@@ -1,5 +1,7 @@
 package eg.edu.alexu.csd.oop.db.cs28;
 
+
+//TODO this class is duplicated (delete it)
 public class Item {
 
 	private String colName;
