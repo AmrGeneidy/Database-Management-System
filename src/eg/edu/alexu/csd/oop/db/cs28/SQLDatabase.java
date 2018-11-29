@@ -163,6 +163,8 @@ public class SQLDatabase implements Database {
 		int actualcolumns = 0;
 		byte[] checkRow;
 
+		
+		
 		Object[][] selected = null;
 		try {
 			File x = new File(currentDatabase + System.getProperty("file.separator")
@@ -342,7 +344,7 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 1, k = 0, g = 0; i < columns.getLength(); i += 2, k++) {
+					for (int i = 0, k = 0, g = 0; i < columns.getLength(); i ++, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
