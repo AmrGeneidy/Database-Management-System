@@ -42,11 +42,11 @@ public class Table {
 
 	// clear Cache and get new instance
 	public static Table loadNewTable(String xmlPath) {
-		if (singleTable != null) {
-			saveDataInXML();
-		}
 		if (tableFullPathXML != null && xmlPath.equalsIgnoreCase(tableFullPathXML)) {
 			return singleTable;
+		}
+		if (singleTable != null) {
+			saveDataInXML();
 		}
 		singleTable = new Table();
 		tableFullPathXML = xmlPath;
