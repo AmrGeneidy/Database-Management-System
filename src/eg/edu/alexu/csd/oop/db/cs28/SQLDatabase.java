@@ -409,9 +409,17 @@ public class SQLDatabase implements Database {
 			rowsCount = table.insert(colNames, values);
 			table.save();
 		}else if ((boolean)map.get(returnType.ISUPDATE)) {
-			rowsCount = ModifyTable.update(currentDatabase,map);
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+			+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			rowsCount = table.update(map);
+			table.save();
 		}else if ((boolean)map.get(returnType.ISDELETE)) {
-			rowsCount = ModifyTable.delete(currentDatabase,map);
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+			+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			rowsCount = table.delete(map);
+			table.save();
 		}
 	
 		return rowsCount;

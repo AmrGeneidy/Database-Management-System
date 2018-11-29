@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,13 +25,15 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
+import eg.edu.alexu.csd.oop.db.cs28.Parser.returnType;
+
 public class Table {
 
 	private static Table singleTable;
 
 	private static String tableFullPathXML;
 	private static String tableFullPathDTD;
-	private static Record[] tableData;
+	private static ArrayList<Record> tableData;
 	private static String[] colsNames;
 	private static String[] colsDataTypes;
 
@@ -52,12 +55,12 @@ public class Table {
 		return singleTable;
 	}
 
-	//setters & getters
-	public Record[] getTableData() {
+	// setters & getters
+	public ArrayList<Record> getTableData() {
 		return tableData;
 	}
 
-	public void setTableData(Record[] tableData) {
+	public void setTableData(ArrayList<Record> tableData) {
 		Table.tableData = tableData;
 	}
 
@@ -68,16 +71,23 @@ public class Table {
 	public String[] getColsDataTypes() {
 		return colsDataTypes;
 	}
-	
-	
 
 	// MUST be called before finishing any method
 	public void save() {
 		saveDataInXML();
 	}
 
+	// TODO convert to HashMap
 	public int insert(String[] colNames, String[] values) {
 		return ModifyTable.insert(singleTable, colNames, values);
+	}
+
+	public int update(HashMap<returnType, Object> map) {
+		return ModifyTable.update(singleTable, map);
+	}
+	
+	public int delete(HashMap<returnType, Object> map) {
+		return ModifyTable.delete(singleTable, map);
 	}
 
 	// save the data from table(cache) in xml file
@@ -161,7 +171,7 @@ public class Table {
 			Document doc = builder.parse(new File(tableFullPathXML));
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getElementsByTagName("record");
-			tableData = new Record[nList.getLength()];
+			tableData = new ArrayList<Record>();
 			String[] record = new String[colsNames.length];
 			for (int i = 0; i < nList.getLength(); i++) {
 				Node nNode = nList.item(i);
@@ -171,7 +181,7 @@ public class Table {
 						String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
 						record[j] = value;
 					}
-					tableData[i] = new Record(record);
+					tableData.add(i, new Record(record));
 				}
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
