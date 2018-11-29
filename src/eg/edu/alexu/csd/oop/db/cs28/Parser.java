@@ -108,10 +108,9 @@ public class Parser {
         } else if (regexChecker("UPDATE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1);
             String[] collector = s.split("(?i)WHERE");
-            s = collector[0];
             ArrayList<Object> column = new ArrayList<>();
             ArrayList<Object> value = new ArrayList<>();
-            updateSetter(s, column, value);
+            updateSetter(collector[0], column, value);
             if(column.isEmpty() || value.isEmpty()) throw new RuntimeException("Invalid Query!!");
             map.put(returnType.COLNAME, column.toArray());
             map.put(returnType.COLVALUES, value.toArray());
@@ -154,7 +153,7 @@ public class Parser {
     }
 
     private void regexUpdateQuery(String query, String separator, ArrayList<Object> col, ArrayList<Object> val) {
-        Pattern regex = Pattern.compile("[a-zA-Z1-9_]+");
+        Pattern regex = Pattern.compile("[a-zA-Z0-9_]+");
         Matcher matcher = regex.matcher(query);
         if (matcher.find()) map.put(returnType.NAME, matcher.group().trim());
         boolean foundSeparator = false;
@@ -180,7 +179,7 @@ public class Parser {
                 if (condition.contains(op)) {
                     String[] operands = condition.split(op);
                     for (int i = 0; i < operands.length; i++) {
-                        Matcher matcher = Pattern.compile("[A-Za-z1-9_]+").matcher(operands[i]);
+                        Matcher matcher = Pattern.compile("\'{0,1}[A-Za-z0-9_]+\'{0,1}").matcher(operands[i]);
                         if (matcher.find()) {
                             operands[i] = matcher.group().trim();
                         }
@@ -194,11 +193,11 @@ public class Parser {
     }
 
     private boolean updateSetter(String s, ArrayList<Object> col, ArrayList<Object> val) {
-        Pattern regex = Pattern.compile("[a-zA-Z1-9_]+");
+        Pattern regex = Pattern.compile("\'{0,1}[a-zA-Z0-9_]+\'{0,1}");
         Matcher matcher = regex.matcher(s);
         matcher.find();
         map.put(returnType.NAME, matcher.group().trim());
-        if (matcher.find() & matcher.group().trim().equals("(?i)SET")) {
+        if (matcher.find() & matcher.group().toUpperCase().trim().equals("SET")) {
             while (matcher.find()) {
                 col.add(matcher.group().trim());
                 matcher.find();
