@@ -165,7 +165,6 @@ public class SQLDatabase implements Database {
 		
 		Object[][] selected = null;
 		try {
-			
 			File x = new File(currentDatabase + System.getProperty("file.separator")
 					+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
 
