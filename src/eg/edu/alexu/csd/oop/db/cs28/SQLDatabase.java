@@ -162,8 +162,6 @@ public class SQLDatabase implements Database {
 		int actualRows = 0;
 		int actualcolumns = 0;
 		byte[] checkRow;
-
-		
 		
 		Object[][] selected = null;
 		try {
