@@ -93,6 +93,7 @@ public class SQLDatabase implements Database {
 					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml").delete();
 			new File(currentDatabase + System.getProperty("file.separator")
 					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd").delete();
+			return true;
 		} else {
 			try {
 				File x = new File(currentDatabase + System.getProperty("file.separator")
@@ -145,7 +146,6 @@ public class SQLDatabase implements Database {
 
 			return true;
 		}
-		return false;
 	}
 
 	@Override
