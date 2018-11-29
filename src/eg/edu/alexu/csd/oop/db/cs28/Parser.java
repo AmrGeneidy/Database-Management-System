@@ -12,19 +12,19 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        if (regexChecker("CREATE[\\s]+DATABASE", query)) {
+        if (regexChecker("CREATE[\\s]+DATABASE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, true);
             map.put(returnType.ISCREATE, true);
             map.put(returnType.NAME, s);
             matched = true;
-        } else if (regexChecker("DROP[\\s]+DATABASE", query)) {
+        } else if (regexChecker("DROP[\\s]+DATABASE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, true);
             map.put(returnType.ISCREATE, false);
             map.put(returnType.NAME, s);
             matched = true;
-        } else if (regexChecker("CREATE[\\s]+TABLE", query)) {
+        } else if (regexChecker("CREATE[\\s]+TABLE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1).trim();
             if (s.indexOf('(') != -1) {
                 map.put(returnType.NAME, s.substring(0, s.indexOf('(')));
@@ -37,6 +37,7 @@ public class Parser {
                     colName[i] = temp[0];
                     colType[i] = temp[1];
                 }
+                if(colName.length == 0) throw new RuntimeException("Invalid Query!!");
                 map.put(returnType.COLNAME, colName);
                 map.put(returnType.COLTYPE, colType);
             } else {
@@ -45,7 +46,7 @@ public class Parser {
             map.put(returnType.ISDATABASE, false);
             map.put(returnType.ISCREATE, true);
             matched = true;
-        } else if (regexChecker("DROP[\\s]+TABLE", query)) {
+        } else if (regexChecker("DROP[\\s]+TABLE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1).trim();
             map.put(returnType.ISDATABASE, false);
             map.put(returnType.ISCREATE, false);
@@ -59,19 +60,20 @@ public class Parser {
 
     public boolean executeQuery(String query) {
         map = new HashMap<>();
-        if (regexChecker("SELECT", query)) {
+        if (regexChecker("SELECT", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1);
-            String[] colCollector = s.split("FROM");
+            String[] colCollector = s.split("(?i)FROM");
             if (!colCollector[0].trim().equals("*")) {
                 String[] col = colCollector[0].split(",");
                 for (int i = 0; i < col.length; i++) {
                     col[i] = col[i].trim();
                 }
                 if (col[0].replaceAll("\\s+", "").equals("")) return false;
+                if(col.length == 0) throw new RuntimeException("Invalid Query!!");
                 map.put(returnType.COLNAME, col);
             }
             s = colCollector[1];
-            String[] collector = s.split("WHERE");
+            String[] collector = s.split("(?i)WHERE");
             map.put(returnType.NAME, collector[0].trim());
             conditionFinder(s, collector);
         }
@@ -81,33 +83,36 @@ public class Parser {
     public boolean executeUpdateQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        if (regexChecker("INSERT[\\s]+INTO", query)) {
+        if (regexChecker("INSERT[\\s]+INTO", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1);
+            if (regexChecker("\\*", s)) return false;
             ArrayList<Object> col = new ArrayList<>();
             ArrayList<Object> val = new ArrayList<>();
             regexUpdateQuery(s, "VALUES", col, val);
+            if(val.isEmpty()) throw new RuntimeException("Invalid Query!!");
             map.put(returnType.COLNAME, col.toArray());
             map.put(returnType.COLVALUES, val.toArray());
             map.put(returnType.ISUPDATE, false);
             map.put(returnType.ISDELETE, false);
             map.put(returnType.ISINSERT, true);
             matched = true;
-        } else if (regexChecker("DELETE[\\s]+FROM", query)) {
+        } else if (regexChecker("DELETE[\\s]+FROM", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1);
-            String[] conditionCollector = s.split("WHERE");
+            String[] conditionCollector = s.split("(?i)WHERE");
             map.put(returnType.NAME, conditionCollector[0].trim());
             conditionFinder(s, conditionCollector);
             map.put(returnType.ISUPDATE, false);
             map.put(returnType.ISDELETE, true);
             map.put(returnType.ISINSERT, false);
             matched = true;
-        } else if (regexChecker("UPDATE", query)) {
+        } else if (regexChecker("UPDATE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1);
-            String[] collector = s.split("WHERE");
+            String[] collector = s.split("(?i)WHERE");
             s = collector[0];
             ArrayList<Object> column = new ArrayList<>();
             ArrayList<Object> value = new ArrayList<>();
             updateSetter(s, column, value);
+            if(column.isEmpty() || value.isEmpty()) throw new RuntimeException("Invalid Query!!");
             map.put(returnType.COLNAME, column.toArray());
             map.put(returnType.COLVALUES, value.toArray());
             conditionFinder(s, collector);
@@ -155,7 +160,7 @@ public class Parser {
         boolean foundSeparator = false;
         while (matcher.find()) {
             String s = matcher.group();
-            if (s.equals(separator)) {
+            if (s.toUpperCase().equals(separator)) {
                 foundSeparator = true;
                 continue;
             }
@@ -168,7 +173,7 @@ public class Parser {
     }
 
     private void conditionFinder(String s, String[] collector) {
-        if (s.contains("WHERE")) {
+        if (s.toUpperCase().contains("WHERE")) {
             String condition = collector[1].trim();
             String[] possibleOperators = {"!=", "<>", "<=", ">=", "==", "<", ">", "="};
             for (String op : possibleOperators) {
@@ -193,7 +198,7 @@ public class Parser {
         Matcher matcher = regex.matcher(s);
         matcher.find();
         map.put(returnType.NAME, matcher.group().trim());
-        if (matcher.find() & matcher.group().trim().equals("SET")) {
+        if (matcher.find() & matcher.group().trim().equals("(?i)SET")) {
             while (matcher.find()) {
                 col.add(matcher.group().trim());
                 matcher.find();
