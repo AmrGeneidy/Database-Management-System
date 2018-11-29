@@ -51,7 +51,10 @@ public class Table {
 		singleTable = new Table();
 		tableFullPathXML = xmlPath;
 		tableFullPathDTD = getDTDPath();
-		loadData();
+		boolean dataReoloaded = loadData();
+		if (!dataReoloaded) {
+			singleTable = null;
+		}
 		return singleTable;
 	}
 
@@ -135,7 +138,7 @@ public class Table {
 	}
 
 	// fill colsNames & colsDataTypes
-	private static void readDTD() {
+	private static boolean readDTD() {
 		BufferedReader reader = null;
 		Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
 		Matcher matcher = null;
@@ -158,12 +161,13 @@ public class Table {
 		} catch (IOException e) {
 			// TODO DTD not found
 			System.out.println("DTD file not found");
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
-	private static void loadData() {
-		readDTD();
+	private static boolean loadData() {
+		boolean dataLoaded = readDTD();
 		try {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder;
@@ -186,8 +190,9 @@ public class Table {
 			}
 		} catch (ParserConfigurationException | SAXException | IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			dataLoaded = false;
 		}
+		return dataLoaded;
 	}
 
 	private static String getDTDPath() {

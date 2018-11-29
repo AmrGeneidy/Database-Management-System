@@ -90,12 +90,17 @@ public class ModifyTable {
 		int indexOfCond = -1;
 		String[] userColsNames = getUserColsNames(map);
 		String[] userValues = getUserValues(map);
-		
+
 		if (operator == null || operands == null) {
 			noConditionCase = true;
 		} else {
 			for (int i = 0; i < table.getColsNames().length; i++) {
 				if (operands[0].equalsIgnoreCase(table.getColsNames()[i])) {
+					// mismatch in dataTypes
+					if (operands[1].contains("'") && table.getColsDataTypes()[i].equals("int")) {
+						return 0;
+					}
+
 					indexOfCond = i;
 					break;
 				}
@@ -107,14 +112,30 @@ public class ModifyTable {
 			return 0;
 		}
 
-		//get index of cols we want to updates
+		// get index of cols we want to updates
 		ArrayList<Integer> colsIndices = new ArrayList<>();
+		// i index of table cols
 		for (int i = 0; i < table.getColsNames().length; i++) {
-			for (int j = 0; j < userColsNames.length; j++) {
-				//TODO check dataType also here
-				if(table.getColsNames()[i].equalsIgnoreCase(userColsNames[j])) {
+			// j index of user cols
+			for (int j = 0; j < userColsNames.length; j++) { 
+				if (table.getColsNames()[i].equalsIgnoreCase(userColsNames[j])) {
+					// dataType mismatch
+					if (table.getColsDataTypes()[i].equals("int") && userValues[j].contains("'")) {
+						return 0;
+					}
 					colsIndices.add(i);
 				}
+
+			}
+		}
+
+		// delete '
+		if (!noConditionCase && operands[1].contains("'")) {
+			operands[1] = operands[1].replaceAll("'", "");
+		}
+		for (int i = 0; i < userValues.length; i++) {
+			if (userValues[i].contains("'")) {
+				userValues[i] = userValues[i].replaceAll("'", "");
 			}
 		}
 		
@@ -123,24 +144,25 @@ public class ModifyTable {
 		// update all table data
 		if (noConditionCase) {
 			ans = table.getTableData().size();
-			//loop all records 
-			for(int i = 0; i < newData.size(); i++) {
+			// loop all records
+			for (int i = 0; i < newData.size(); i++) {
 				for (int j = 0; j < colsIndices.size(); j++) {
 					int indexOfCol = colsIndices.get(j);
 					newData.get(i).setItem(indexOfCol, userValues[j]);
 				}
-			}				
+			}
 		} else {
 			switch (operator) {
 			case "=":
 				for (int i = 0; i < newData.size(); i++) {
 					String x = newData.get(i).getItem(indexOfCond);
 					// TODO case insensitive ?!
-					if (x.equals(operands[1])) {
+					if (x.equalsIgnoreCase(operands[1])) {
 						for (int j = 0; j < colsIndices.size(); j++) {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
@@ -154,6 +176,7 @@ public class ModifyTable {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
@@ -167,6 +190,7 @@ public class ModifyTable {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
@@ -175,11 +199,12 @@ public class ModifyTable {
 				for (int i = 0; i < newData.size(); i++) {
 					String x = newData.get(i).getItem(indexOfCond);
 					// TODO case insensitive ?!
-					if (!x.equals(operands[1])) {
+					if (!x.equalsIgnoreCase(operands[1])) {
 						for (int j = 0; j < colsIndices.size(); j++) {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
@@ -193,6 +218,7 @@ public class ModifyTable {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
@@ -206,13 +232,14 @@ public class ModifyTable {
 							int indexOfCol = colsIndices.get(j);
 							newData.get(i).setItem(indexOfCol, userValues[j]);
 						}
+						i--;
 						ans++;
 					}
 				}
 				break;
 
 			}
-			
+
 		}
 		table.setTableData(newData);
 		return ans;
@@ -221,7 +248,7 @@ public class ModifyTable {
 	private static String[] getUserValues(HashMap<returnType, Object> map) {
 		String[] values = null;
 		if (map.containsKey(returnType.COLVALUES)) {
-			values = (String[]) map.get(returnType.COLVALUES);
+			values = Arrays.copyOf((Object[])map.get(returnType.COLVALUES), ((Object[])map.get(returnType.COLVALUES)).length, String[].class);
 		}
 		return values;
 	}
@@ -229,7 +256,7 @@ public class ModifyTable {
 	private static String[] getUserColsNames(HashMap<returnType, Object> map) {
 		String[] colsNames = null;
 		if (map.containsKey(returnType.COLNAME)) {
-			colsNames = (String[]) map.get(returnType.COLNAME);
+			colsNames = Arrays.copyOf((Object[])map.get(returnType.COLNAME), ((Object[])map.get(returnType.COLNAME)).length, String[].class);
 		}
 		return colsNames;
 	}
@@ -247,6 +274,11 @@ public class ModifyTable {
 		} else {
 			for (int i = 0; i < table.getColsNames().length; i++) {
 				if (operands[0].equalsIgnoreCase(table.getColsNames()[i])) {
+					// mismatch in dataTypes
+					if (operands[1].contains("'") && table.getColsDataTypes()[i].equals("int")) {
+						return 0;
+					}
+
 					indexOfCond = i;
 					break;
 				}
@@ -256,6 +288,11 @@ public class ModifyTable {
 		// can't find the col in the condition
 		if (!noConditionCase && indexOfCond == -1) {
 			return 0;
+		}
+
+		// delete '
+		if (!noConditionCase && operands[1].contains("'")) {
+			operands[1] = operands[1].replaceAll("'", "");
 		}
 
 		ArrayList<Record> newData = table.getTableData();
@@ -270,8 +307,9 @@ public class ModifyTable {
 				for (int i = 0; i < newData.size(); i++) {
 					String x = newData.get(i).getItem(indexOfCond);
 					// TODO case insensitive ?!
-					if (x.equals(operands[1])) {
+					if (x.equalsIgnoreCase(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -282,6 +320,7 @@ public class ModifyTable {
 					// TODO case insensitive ?!
 					if (Integer.parseInt(x) > Integer.parseInt(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -292,6 +331,7 @@ public class ModifyTable {
 					// TODO case insensitive ?!
 					if (Integer.parseInt(x) < Integer.parseInt(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -300,8 +340,9 @@ public class ModifyTable {
 				for (int i = 0; i < newData.size(); i++) {
 					String x = newData.get(i).getItem(indexOfCond);
 					// TODO case insensitive ?!
-					if (!x.equals(operands[1])) {
+					if (!x.equalsIgnoreCase(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -312,6 +353,7 @@ public class ModifyTable {
 					// TODO case insensitive ?!
 					if (Integer.parseInt(x) >= Integer.parseInt(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -322,6 +364,7 @@ public class ModifyTable {
 					// TODO case insensitive ?!
 					if (Integer.parseInt(x) <= Integer.parseInt(operands[1])) {
 						newData.remove(i);
+						i--;
 						ans++;
 					}
 				}
@@ -447,7 +490,16 @@ public class ModifyTable {
 		return operator;
 
 	}
-
+	
+	/* TODO delete this
+	private static String[] getCondOperands(HashMap<returnType, Object> map) {
+		String[] operands = null;
+		if (map.containsKey(returnType.CONDITIONOPERANDS)) {
+			operands = Arrays.copyOf((Object[])map.get(returnType.CONDITIONOPERANDS), ((Object[])map.get(returnType.CONDITIONOPERANDS)).length, String[].class);
+		}
+		return operands;
+	}
+	*/
 	private static String[] getCondOperands(HashMap<returnType, Object> map) {
 		String[] operands = null;
 		if (map.containsKey(returnType.CONDITIONOPERANDS)) {
