@@ -82,12 +82,15 @@ public class ModifyTable {
 	}
 
 	public static int update(Table table, HashMap<returnType, Object> map) {
+		// TODO check if user condition & values matches table's dataTypes or not
 		int ans = 0;
 		String operator = getCondOperator(map);
 		String[] operands = getCondOperands(map);
 		boolean noConditionCase = false;
 		int indexOfCond = -1;
-
+		String[] userColsNames = getUserColsNames(map);
+		String[] userValues = getUserValues(map);
+		
 		if (operator == null || operands == null) {
 			noConditionCase = true;
 		} else {
@@ -104,9 +107,131 @@ public class ModifyTable {
 			return 0;
 		}
 
+		//get index of cols we want to updates
+		ArrayList<Integer> colsIndices = new ArrayList<>();
+		for (int i = 0; i < table.getColsNames().length; i++) {
+			for (int j = 0; j < userColsNames.length; j++) {
+				//TODO check dataType also here
+				if(table.getColsNames()[i].equalsIgnoreCase(userColsNames[j])) {
+					colsIndices.add(i);
+				}
+			}
+		}
+		
 		ArrayList<Record> newData = table.getTableData();
 
-		return 0;
+		// update all table data
+		if (noConditionCase) {
+			ans = table.getTableData().size();
+			//loop all records 
+			for(int i = 0; i < newData.size(); i++) {
+				for (int j = 0; j < colsIndices.size(); j++) {
+					int indexOfCol = colsIndices.get(j);
+					newData.get(i).setItem(indexOfCol, userValues[j]);
+				}
+			}				
+		} else {
+			switch (operator) {
+			case "=":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (x.equals(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+			case ">":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (Integer.parseInt(x) > Integer.parseInt(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+			case "<":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (Integer.parseInt(x) < Integer.parseInt(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+			case "<>":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (!x.equals(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+			case ">=":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (Integer.parseInt(x) >= Integer.parseInt(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+			case "<=":
+				for (int i = 0; i < newData.size(); i++) {
+					String x = newData.get(i).getItem(indexOfCond);
+					// TODO case insensitive ?!
+					if (Integer.parseInt(x) <= Integer.parseInt(operands[1])) {
+						for (int j = 0; j < colsIndices.size(); j++) {
+							int indexOfCol = colsIndices.get(j);
+							newData.get(i).setItem(indexOfCol, userValues[j]);
+						}
+						ans++;
+					}
+				}
+				break;
+
+			}
+			
+		}
+		table.setTableData(newData);
+		return ans;
+	}
+
+	private static String[] getUserValues(HashMap<returnType, Object> map) {
+		String[] values = null;
+		if (map.containsKey(returnType.COLVALUES)) {
+			values = (String[]) map.get(returnType.COLVALUES);
+		}
+		return values;
+	}
+
+	private static String[] getUserColsNames(HashMap<returnType, Object> map) {
+		String[] colsNames = null;
+		if (map.containsKey(returnType.COLNAME)) {
+			colsNames = (String[]) map.get(returnType.COLNAME);
+		}
+		return colsNames;
 	}
 
 	public static int delete(Table table, HashMap<returnType, Object> map) {
