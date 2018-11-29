@@ -162,7 +162,7 @@ public class SQLDatabase implements Database {
 		int actualRows = 0;
 		int actualcolumns = 0;
 		byte[] checkRow;
-
+		
 		Object[][] selected = null;
 		try {
 			File x = new File(currentDatabase + System.getProperty("file.separator")
@@ -342,7 +342,7 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 1, k = 0, g = 0; i < columns.getLength(); i += 2, k++) {
+					for (int i = 0, k = 0, g = 0; i < columns.getLength(); i ++, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
@@ -350,7 +350,20 @@ public class SQLDatabase implements Database {
 							Element n = (Element) content;
 							if (checkRow[j] == 1 && checkColumn[k] == 1) {
 								if (!n.getTextContent().equals("")) {
-									selected[c][g] = n.getTextContent();
+									boolean isNum = true;
+									for (char c1 : n.getTextContent().toCharArray()) {
+										if (!Character.isDigit(c1)) {
+											isNum = false;
+										}
+									}
+									if (isNum) {
+										value = Integer.parseInt(n.getTextContent());
+										selected[c][g] = value;
+									}
+									else {
+										selected[c][g] = n.getTextContent();
+									}
+									
 									g++;
 								}
 								flag = true;
