@@ -14,4 +14,8 @@ public class Record {
 		return record[index];
 	}
 	
+	public void setItem(int index, String value) {
+		this.record[index] = value;
+	}
+	
 }
