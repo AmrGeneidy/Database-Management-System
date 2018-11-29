@@ -129,7 +129,6 @@ public class Table {
 			e.printStackTrace();
 		} catch (SAXException | IOException e) {
 			// TODO table not found
-			e.printStackTrace();
 		} catch (TransformerException e) {
 			// TODO error while writing into file
 			e.printStackTrace();
