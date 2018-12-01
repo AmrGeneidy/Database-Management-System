@@ -11,9 +11,8 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         while (sc.hasNext()) {
             String query = sc.nextLine();
-            String upperQ = query.toUpperCase();
             try {
-                database.excuteQuery(upperQ);
+                database.excuteQuery(query);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
