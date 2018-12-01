@@ -1,6 +1,5 @@
 package eg.edu.alexu.csd.oop.db.cs28;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Main {
@@ -12,7 +11,7 @@ public class Main {
         while (sc.hasNext()) {
             String query = sc.nextLine();
             try {
-                database.excuteQuery(query);
+                database.executeQuery(query);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
             }
