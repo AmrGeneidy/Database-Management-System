@@ -42,11 +42,11 @@ public class Table {
 
 	// clear Cache and get new instance
 	public static Table loadNewTable(String xmlPath) {
-		if (singleTable != null) {
-			saveDataInXML();
-		}
 		if (tableFullPathXML != null && xmlPath.equalsIgnoreCase(tableFullPathXML)) {
 			return singleTable;
+		}
+		if (singleTable != null) {
+			saveDataInXML();
 		}
 		singleTable = new Table();
 		tableFullPathXML = xmlPath;
@@ -129,7 +129,6 @@ public class Table {
 			e.printStackTrace();
 		} catch (SAXException | IOException e) {
 			// TODO table not found
-			e.printStackTrace();
 		} catch (TransformerException e) {
 			// TODO error while writing into file
 			e.printStackTrace();

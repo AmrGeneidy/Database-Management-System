@@ -55,11 +55,9 @@ public class SQLDatabase implements Database {
 			} else
 				currentDatabase = databaseName;
 		} else {
-			currentDatabase = databaseName;
 			try {
 				executeStructureQuery("CREATE DATABASE " + databaseName);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -70,81 +68,36 @@ public class SQLDatabase implements Database {
 	public boolean executeStructureQuery(String query) throws SQLException {
 		Parser parser = new Parser();
 		if (!parser.executeStructureQuery(query)) {
-			throw new SQLException();
+			throw new SQLException("Invalid Query!!");
 		}
 		HashMap<returnType, Object> map = parser.map;
+		FoldersAndFilesHandler handler = new FoldersAndFilesHandler();
 		if ((boolean) map.get(returnType.ISDATABASE) && (boolean) map.get(returnType.ISCREATE)) {
-			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
-			dbDir.mkdirs();
-			currentDatabase = ((String) map.get(returnType.NAME)).toLowerCase();
+			String path = ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.createDatabase(path);
+			currentDatabase = path;
 			return true;
 		} else if ((boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
-			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
-			File[] listFiles = dbDir.listFiles();
-			for (File file : listFiles) {
-				file.delete();
-			}
-			dbDir.delete();
+			String path = ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.deleteDatabase(path);
 			return true;
 		} else if (currentDatabase == null) {
-			throw new SQLException();
+			throw new SQLException("No Database is selected !");
 		} else if (!(boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
-			new File(currentDatabase + System.getProperty("file.separator")
-					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml").delete();
-			new File(currentDatabase + System.getProperty("file.separator")
-					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd").delete();
+			String path = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.deleteTable(path);
 			return true;
 		} else {
-			try {
-				File x = new File(currentDatabase + System.getProperty("file.separator")
-						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml");
-				if (x.exists()) {
-					return false;
-				}
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.newDocument();
-				Element rootElement = doc.createElement(((String) map.get(returnType.NAME)).toLowerCase());
-				doc.appendChild(rootElement);
-				// write the content into xml file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(x);
-				transformer.transform(source, result);
-				@SuppressWarnings("resource")
-				PrintWriter writer = new PrintWriter(currentDatabase + System.getProperty("file.separator")
-						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd");
-				writer.print("<!ELEMENT row (");
-				String[] colName = (String[]) map.get(returnType.COLNAME);
-				for (int i = 0; i < colName.length; i++) {
-					if (i < colName.length - 1) {
-						writer.print(colName[i] + ",");
-					} else {
-						writer.println(colName[i] + ")>");
-					}
-				}
-				String[] coltype = (String[]) map.get(returnType.COLTYPE);
-				for (int i = 0; i < colName.length; i++) {
-					writer.println("<!ELEMENT " + colName[i] + " " + coltype[i] + ">");
-				}
-				writer.close();
-			} catch (FileNotFoundException e) {
-				return false;
-			} catch (IOException e) {
-				return false;
-			} catch (TransformerConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			String path = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase();
 
-			return true;
+			try {
+				return handler.createTable(path, (String) map.get(returnType.NAME),
+						(String[]) map.get(returnType.COLNAME), (String[]) map.get(returnType.COLTYPE));
+			} catch (Exception e) {
+				return false;
+			}
 		}
 	}
 
@@ -162,7 +115,7 @@ public class SQLDatabase implements Database {
 		int actualRows = 0;
 		int actualcolumns = 0;
 		byte[] checkRow;
-		
+
 		Object[][] selected = null;
 		try {
 			File x = new File(currentDatabase + System.getProperty("file.separator")
@@ -342,7 +295,7 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 0, k = 0, g = 0; i < columns.getLength(); i ++, k++) {
+					for (int i = 0, k = 0, g = 0; i < columns.getLength(); i++, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
@@ -359,11 +312,10 @@ public class SQLDatabase implements Database {
 									if (isNum) {
 										value = Integer.parseInt(n.getTextContent());
 										selected[c][g] = value;
-									}
-									else {
+									} else {
 										selected[c][g] = n.getTextContent();
 									}
-									
+
 									g++;
 								}
 								flag = true;
