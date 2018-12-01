@@ -25,7 +25,7 @@ public class Facade {
 				throw new RuntimeException("Invalid Query!!");
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException("Invalid Query!!");
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 

@@ -55,11 +55,9 @@ public class SQLDatabase implements Database {
 			} else
 				currentDatabase = databaseName;
 		} else {
-			currentDatabase = databaseName;
 			try {
 				executeStructureQuery("CREATE DATABASE " + databaseName);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -70,7 +68,7 @@ public class SQLDatabase implements Database {
 	public boolean executeStructureQuery(String query) throws SQLException {
 		Parser parser = new Parser();
 		if (!parser.executeStructureQuery(query)) {
-			throw new SQLException();
+			throw new SQLException("Invalid Query!!");
 		}
 		HashMap<returnType, Object> map = parser.map;
 		FoldersAndFilesHandler handler = new FoldersAndFilesHandler();
