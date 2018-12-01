@@ -40,6 +40,13 @@ public class ModifyTable {
 			processFailed = true;
 		}
 
+		for (int i = 0; i < values.length; i++) {
+			if (values[i].contains("'")) {
+				values[i] = values[i].replaceAll("'", "");
+			}
+		}
+		
+		
 		String[] itemsRow = new String[colNames.length];
 		String[] dataTypes = table.getColsDataTypes();
 		if (allColsCase) {
