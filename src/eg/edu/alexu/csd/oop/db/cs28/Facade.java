@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import eg.edu.alexu.csd.oop.db.Database;
 
 public class Facade {
-	Database database;
+	private Database database;
 
 	public Facade(Database database) {
 		this.database = database;
@@ -25,7 +25,7 @@ public class Facade {
 				throw new RuntimeException("Invalid Query!!");
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException("Invalid Query!!");
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 
