@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import java.util.Scanner;
@@ -35,7 +36,6 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
 public class SQLDatabase implements Database {
 
 	private String currentDatabase;
@@ -48,17 +48,16 @@ public class SQLDatabase implements Database {
 			if (dropIfExists) {
 				try {
 					executeStructureQuery("DROP DATABASE " + databaseName);
+					executeStructureQuery("CREATE DATABASE " + databaseName);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else
 				currentDatabase = databaseName;
 		} else {
-			currentDatabase = databaseName;
 			try {
 				executeStructureQuery("CREATE DATABASE " + databaseName);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -69,105 +68,59 @@ public class SQLDatabase implements Database {
 	public boolean executeStructureQuery(String query) throws SQLException {
 		Parser parser = new Parser();
 		if (!parser.executeStructureQuery(query)) {
-			throw new SQLException();
+			throw new SQLException("Invalid Query!!");
 		}
 		HashMap<returnType, Object> map = parser.map;
+		FoldersAndFilesHandler handler = new FoldersAndFilesHandler();
 		if ((boolean) map.get(returnType.ISDATABASE) && (boolean) map.get(returnType.ISCREATE)) {
-			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
-			dbDir.mkdirs();
-			currentDatabase = ((String) map.get(returnType.NAME)).toLowerCase();
+			String path = ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.createDatabase(path);
+			currentDatabase = path;
 			return true;
 		} else if ((boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
-			File dbDir = new File(((String) map.get(returnType.NAME)).toLowerCase());
-			File[] listFiles = dbDir.listFiles();
-			for (File file : listFiles) {
-				file.delete();
-			}
+			String path = ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.deleteDatabase(path);
 			return true;
 		} else if (currentDatabase == null) {
-			throw new SQLException();
+			throw new SQLException("No Database is selected !");
 		} else if (!(boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
-			new File(currentDatabase + System.getProperty("file.separator")
-					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml").delete();
-			new File(currentDatabase + System.getProperty("file.separator")
-					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd").delete();
-		} else {
-			try {
-				File x = new File(currentDatabase + System.getProperty("file.separator")
-						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml");
-				if (x.exists()) {
-					return false;
-				}
-				DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = dBuilder.newDocument();
-				 Element rootElement = doc.createElement(((String) map.get(returnType.NAME)).toLowerCase());
-		         doc.appendChild(rootElement);
-				// write the content into xml file
-				TransformerFactory transformerFactory = TransformerFactory.newInstance();
-				Transformer transformer = transformerFactory.newTransformer();
-				DOMSource source = new DOMSource(doc);
-				StreamResult result = new StreamResult(x);
-				transformer.transform(source, result);
-				@SuppressWarnings("resource")
-				PrintWriter writer = new PrintWriter(currentDatabase + System.getProperty("file.separator")
-						+ ((String) map.get(returnType.NAME)).toLowerCase() + ".dtd");
-				writer.print("<!ELEMENT row (");
-				String[] colName = (String[]) map.get(returnType.COLNAME);
-				for (int i = 0; i < colName.length; i++) {
-					if (i < colName.length - 1) {
-						writer.print(colName[i] + ",");
-					} else {
-						writer.println(colName[i] + ")>");
-					}
-				}
-				String[] coltype = (String[]) map.get(returnType.COLTYPE);
-				for (int i = 0; i < colName.length; i++) {
-					writer.println("<!ELEMENT " + colName[i] + " " + coltype[i] + ">");
-				}
-				writer.close();
-			} catch (FileNotFoundException e) {
-				return false;
-			} catch (IOException e) {
-				return false;
-			} catch (TransformerConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransformerException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			String path = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase();
+			handler.deleteTable(path);
 			return true;
+		} else {
+			String path = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase();
+
+			try {
+				return handler.createTable(path, (String) map.get(returnType.NAME),
+						(String[]) map.get(returnType.COLNAME), (String[]) map.get(returnType.COLTYPE));
+			} catch (Exception e) {
+				return false;
+			}
 		}
-		return false;
 	}
 
+	@Override
+	public Object[][] executeQuery(String query) throws SQLException {
 
-    @Override
- public Object[][] executeQuery(String query) throws SQLException {
-    	
-    	Parser parser = new Parser();
-    	parser.executeQuery(query);
-    	HashMap<returnType, Object> data = parser.map;
-    	
-    	String [] columnsArray = (String[]) data.get(returnType.COLNAME);
-    	String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
-    	String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
-    	int value = 0;
-    	int actualRows = 0;
+		Parser parser = new Parser();
+		parser.executeQuery(query);
+		HashMap<returnType, Object> data = parser.map;
+
+		String[] columnsArray = (String[]) data.get(returnType.COLNAME);
+		String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
+		String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
+		int value = 0;
+		int actualRows = 0;
 		int actualcolumns = 0;
 		byte[] checkRow;
-    	
-    	
-    	Object[][] selected = null;
-    	try {
-    		File x = new File(currentDatabase + System.getProperty("file.separator")
-			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
-    		
+
+		Object[][] selected = null;
+		try {
+			File x = new File(currentDatabase + System.getProperty("file.separator")
+					+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(x);
@@ -176,64 +129,61 @@ public class SQLDatabase implements Database {
 			NodeList rows = doc.getElementsByTagName("record");
 
 			Item[] col = ModifyTable.readDTD(currentDatabase + System.getProperty("file.separator")
-			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".dtd");
-			
+					+ ((String) data.get(returnType.NAME)).toLowerCase() + ".dtd");
+
 			checkRow = new byte[rows.getLength()];
 			int numOfColumns = col.length;
 			// database name
 			System.out.println("Database Name: " + doc.getDocumentElement().getNodeName());
 
-			
 			byte[] checkColumn = new byte[numOfColumns];
 
 			if (columnsArray == null && conditionOperands == null) {
-				//no condition
-					for (int i = 0; i < checkRow.length; i++) {
-						checkRow[i] = 1;
-						actualRows++;
+				// no condition
+				for (int i = 0; i < checkRow.length; i++) {
+					checkRow[i] = 1;
+					actualRows++;
 				}
+				for (int i = 0; i < checkColumn.length; i++) {
+					checkColumn[i] = 1;
+					actualcolumns++;
+				}
+
+			} else if (conditionOperands != null) {
+				if (columnsArray == null) {
 					for (int i = 0; i < checkColumn.length; i++) {
 						checkColumn[i] = 1;
 						actualcolumns++;
+					}
 				}
-					
-			}
-			else if(conditionOperands != null) {
-				if(columnsArray == null) {
-					for (int i = 0; i < checkColumn.length; i++) {
-						checkColumn[i] = 1;
-						actualcolumns++;
-				}
-				}
-				
+
 				String firstComparator = conditionOperands[0];
 				String secondComparator = conditionOperands[1];
-				
+
 				boolean isNum = true;
-				 for (char c : secondComparator.toCharArray())
-				    {
-				        if (!Character.isDigit(c)) {
-				        	isNum = false;
-				        }
-				    }
-				 if(isNum) {
-					 value = Integer.parseInt(secondComparator);
-				 }
-				
+				for (char c : secondComparator.toCharArray()) {
+					if (!Character.isDigit(c)) {
+						isNum = false;
+					}
+				}
+				if (isNum) {
+					value = Integer.parseInt(secondComparator);
+				}
+
 				for (int i = 0; i < checkRow.length; i++) {
 					Node p = rows.item(i);
 					if (p.getNodeType() == Node.ELEMENT_NODE) {
 						Element e = (Element) p;
 						NodeList columns = e.getChildNodes();
-						for (int j = 1, k = 0; j < columns.getLength(); j += 2, k++) {
+						for (int j = 0, k = 0; j < columns.getLength(); j++, k++) {
 							Node content = columns.item(j);
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								Element n = (Element) content;
-								if(!(columnsArray == null)) {
-									for(int v = 0; v < columnsArray.length; v++) {
+								if (!(columnsArray == null)) {
+									for (int v = 0; v < columnsArray.length; v++) {
 										String s = n.getTagName();
-										if(s.equalsIgnoreCase(columnsArray[v])) {
-											if(checkColumn[k] == 0) {
+										if (s.equalsIgnoreCase(columnsArray[v])) {
+											if (checkColumn[k] == 0) {
 												actualcolumns++;
 											}
 											checkColumn[k] = 1;
@@ -241,7 +191,7 @@ public class SQLDatabase implements Database {
 										}
 									}
 								}
-								
+
 								if (n.getTagName().equalsIgnoreCase(firstComparator)) {
 									// conditions
 									switch (conditionOprtator) {
@@ -253,54 +203,53 @@ public class SQLDatabase implements Database {
 										break;
 									case ">":
 										int sample = Integer.parseInt(n.getTextContent());
-										if(sample > value) {
+										if (sample > value) {
 											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<":
 										sample = Integer.parseInt(n.getTextContent());
-										if(sample < value) {
+										if (sample < value) {
 											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<>":
 										sample = Integer.parseInt(n.getTextContent());
-										if(sample != value) {
+										if (sample != value) {
 											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case ">=":
 										sample = Integer.parseInt(n.getTextContent());
-										if(sample >= value) {
+										if (sample >= value) {
 											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									case "<=":
 										sample = Integer.parseInt(n.getTextContent());
-										if(sample <= value) {
+										if (sample <= value) {
 											checkRow[i] = 1;
 											actualRows++;
 										}
 										break;
 									default:
 										System.out.println("Not Found");
-										
+
 									}
 								}
 							}
 						}
 					}
 				}
-			}
-			else if(columnsArray != null && conditionOperands == null) {
+			} else if (columnsArray != null && conditionOperands == null) {
 				for (int i = 0; i < checkRow.length; i++) {
 					checkRow[i] = 1;
 					actualRows++;
-			}
+				}
 				for (int j = 0; j < rows.getLength(); j++) {
 					// get the first row as a node
 					Node p = rows.item(j);
@@ -316,11 +265,11 @@ public class SQLDatabase implements Database {
 							if (content.getNodeType() == Node.ELEMENT_NODE) {
 								// n is a cell in the row
 								Element n = (Element) content;
-								
-								for(int v = 0; v < columnsArray.length; v++) {
+
+								for (int v = 0; v < columnsArray.length; v++) {
 									String s = n.getTagName();
-									if(s.equalsIgnoreCase(columnsArray[v])) {
-										if(checkColumn[k] == 0) {
+									if (s.equalsIgnoreCase(columnsArray[v])) {
+										if (checkColumn[k] == 0) {
 											actualcolumns++;
 										}
 										checkColumn[k] = 1;
@@ -332,7 +281,7 @@ public class SQLDatabase implements Database {
 					}
 				}
 			}
-			
+
 			selected = new Object[actualRows][actualcolumns];
 			int c = 0;
 			boolean flag = false;
@@ -346,15 +295,27 @@ public class SQLDatabase implements Database {
 					String id = e.getAttribute("id");
 					// the first row cells
 					NodeList columns = e.getChildNodes();
-					for (int i = 1, k = 0, g = 0; i < columns.getLength(); i += 2, k++) {
+					for (int i = 0, k = 0, g = 0; i < columns.getLength(); i++, k++) {
 						// cell as a node
 						Node content = columns.item(i);
 						if (content.getNodeType() == Node.ELEMENT_NODE) {
 							// n is a cell in the row
 							Element n = (Element) content;
 							if (checkRow[j] == 1 && checkColumn[k] == 1) {
-								if(!n.getTextContent().equals("")) {
-									selected[c][g] = n.getTextContent();
+								if (!n.getTextContent().equals("")) {
+									boolean isNum = true;
+									for (char c1 : n.getTextContent().toCharArray()) {
+										if (!Character.isDigit(c1)) {
+											isNum = false;
+										}
+									}
+									if (isNum) {
+										value = Integer.parseInt(n.getTextContent());
+										selected[c][g] = value;
+									} else {
+										selected[c][g] = n.getTextContent();
+									}
+
 									g++;
 								}
 								flag = true;
@@ -385,25 +346,57 @@ public class SQLDatabase implements Database {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        return selected;
-    }
+		return selected;
+	}
 
 	@Override
 	public int executeUpdateQuery(String query) throws SQLException {
 		int rowsCount = 0;
+		Table table;
 		Parser parser = new Parser();
 		if (!parser.executeUpdateQuery(query)) {
 			throw new SQLException();
 		}
 		HashMap<returnType, Object> map = parser.map;
-		if ((boolean)map.get(returnType.ISINSERT)) {
-			rowsCount = ModifyTable.insert(currentDatabase,map);
-		}else if ((boolean)map.get(returnType.ISUPDATE)) {
-			rowsCount = ModifyTable.update(currentDatabase,map);
-		}else if ((boolean)map.get(returnType.ISDELETE)) {
-			rowsCount = ModifyTable.delete(currentDatabase,map);
+		if ((boolean) map.get(returnType.ISINSERT)) {
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			Object[] ob1 = (Object[]) map.get(returnType.COLNAME);
+			Object[] ob2 = (Object[]) map.get(returnType.COLVALUES);
+			String[] colNames = Arrays.copyOf(ob1, ob1.length, String[].class);
+			String[] values = Arrays.copyOf(ob2, ob2.length, String[].class);
+			if (table != null) {
+				rowsCount = table.insert(colNames, values);
+				table.save();
+			} else {
+				throw new SQLException();
+			}
+
+		} else if ((boolean) map.get(returnType.ISUPDATE)) {
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			if (table != null) {
+				rowsCount = table.update(map);
+				table.save();
+			} else {
+				throw new SQLException();
+			}
+
+		} else if ((boolean) map.get(returnType.ISDELETE)) {
+			String xmlPath = currentDatabase + System.getProperty("file.separator")
+					+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
+			table = Table.loadNewTable(xmlPath);
+			if (table != null) {
+				rowsCount = table.delete(map);
+				table.save();
+			} else {
+				throw new SQLException();
+			}
+
 		}
-	
+
 		return rowsCount;
 	}
 }
