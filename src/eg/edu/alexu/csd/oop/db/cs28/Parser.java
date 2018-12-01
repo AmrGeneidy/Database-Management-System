@@ -33,7 +33,7 @@ public class Parser {
             matched = true;
         } else if (crTMatcher1.find()) {
             map.put(returnType.NAME, crTMatcher1.group(5));
-            if (!crTMatcher2.find()) return true;
+            if (!crTMatcher2.find()) return false;
             query = crTMatcher2.group(7);
             String[] nameAndType = query.split(",");
             String[] colName = new String[nameAndType.length];
@@ -115,6 +115,8 @@ public class Parser {
             if (insertWithColFind) {
                 regexUpdateQuery(insertMatcherWithCol.group(4), col);
                 map.put(returnType.COLNAME, col.toArray());
+            } else {
+                map.put(returnType.COLNAME, new Object[0]);
             }
             map.put(returnType.ISUPDATE, false);
             map.put(returnType.ISDELETE, false);
