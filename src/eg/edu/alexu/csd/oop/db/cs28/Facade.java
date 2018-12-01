@@ -11,15 +11,15 @@ public class Facade {
 		this.database = database;
 	}
 
-	public void excuteQuery(String query) {
+	public void executeQuery(String query) {
 		try {
-			if (query.contains("CREATE") || query.contains("DROP")) {
+			if (query.toUpperCase().contains("CREATE") || query.toUpperCase().contains("DROP")) {
 				if (!database.executeStructureQuery(query)) {
 					throw new RuntimeException("couldn't excute the query due to error in file system");
 				}
-			} else if (query.contains("SELECT")) {
+			} else if (query.toUpperCase().contains("SELECT")) {
 				database.executeQuery(query);
-			} else if (query.contains("INSERT") || query.contains("DELETE") || query.contains("UPDATE")) {
+			} else if (query.toUpperCase().contains("INSERT") || query.toUpperCase().contains("DELETE") || query.toUpperCase().contains("UPDATE")) {
 				database.executeUpdateQuery(query);
 			} else {
 				throw new RuntimeException("Invalid Query!!");
