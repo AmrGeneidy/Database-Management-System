@@ -27,8 +27,8 @@ public class Parser {
         } else if (regexChecker("CREATE[\\s]+TABLE", query.toUpperCase())) {
             String s = query.substring(lastMatchedIndex + 1).trim();
             if (s.indexOf('(') != -1) {
-                map.put(returnType.NAME, s.substring(0, s.indexOf('(')));
-                s = s.substring(s.indexOf('(') + 1, s.indexOf(')'));
+                map.put(returnType.NAME, s.substring(0, s.indexOf('(')).trim());
+                s = s.substring(s.indexOf('(') + 1, s.indexOf(')')).trim();
                 String[] nameAndType = s.split(",");
                 String[] colName = new String[nameAndType.length];
                 String[] colType = new String[nameAndType.length];
