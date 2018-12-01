@@ -333,7 +333,6 @@ public class SQLDatabase implements Database {
                     System.out.print(selected[i][j] + "	");
                 }
                 System.out.println();
-
             }
 
         } catch (ParserConfigurationException e) {
