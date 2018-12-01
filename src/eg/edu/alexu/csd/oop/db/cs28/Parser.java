@@ -11,15 +11,15 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
-        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
-        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
         Matcher crTMatcher1 = crTRegex1.matcher(query);
-        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)([\\s]*)[(]([^)]+)[)]");
+        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)([\\s]*)[(]([^)]+)[)]");
         Matcher crTMatcher2 = crTRegex2.matcher(query);
-        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"']+)");
+        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
         Matcher drTMatcher = drTRegex.matcher(query);
         if (crDBMatcher.find()) {
             map.put(returnType.NAME, crDBMatcher.group(5));
