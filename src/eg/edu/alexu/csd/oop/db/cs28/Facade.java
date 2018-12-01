@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import eg.edu.alexu.csd.oop.db.Database;
 
 public class Facade {
-	Database database;
+	private Database database;
 
 	public Facade(Database database) {
 		this.database = database;
