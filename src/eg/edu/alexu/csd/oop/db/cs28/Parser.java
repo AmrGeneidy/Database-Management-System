@@ -76,10 +76,11 @@ public class Parser {
                 if (sColArr.length == 0 || sColArr[0].replaceAll("\\s+", "").equals("")) return false;
                 map.put(returnType.COLNAME, sColArr);
             }
-            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)[\\s]+(.+)");
+            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)");
             Matcher selectConditionMatcher = selectConditionRegex.matcher(query);
             if (selectConditionMatcher.find()) {
-                if (!conditionFinder(selectConditionMatcher.group(6))) return false;
+                int conditionIndex = selectConditionMatcher.end();
+                if (!conditionFinder(query.substring(conditionIndex + 1).trim())) return false;
             }
         } else return false;
         return true;
