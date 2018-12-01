@@ -7,23 +7,15 @@ public class Main {
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
-        SQLDatabase d = new SQLDatabase();
+        Facade database = new Facade(new SQLDatabase());
         Scanner sc = new Scanner(System.in);
         while (sc.hasNext()) {
             String query = sc.nextLine();
             String upperQ = query.toUpperCase();
             try {
-                if(upperQ.contains("CREATE") || upperQ.contains("DROP")) {
-                    d.executeStructureQuery(query);
-                } else if(upperQ.contains("SELECT")) {
-                    d.executeQuery(query);
-                } else if(upperQ.contains("INSERT") || upperQ.contains("DELETE") || upperQ.contains("UPDATE")) {
-                    d.executeUpdateQuery(query);
-                } else {
-                    throw new RuntimeException("Invalid Query!!");
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                database.excuteQuery(upperQ);
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
             }
         }
     }
