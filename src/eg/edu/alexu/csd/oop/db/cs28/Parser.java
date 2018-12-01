@@ -81,14 +81,14 @@ public class Parser {
             if (selectConditionMatcher.find()) {
                 if (!conditionFinder(selectConditionMatcher.group(6))) return false;
             }
-        }
+        } else return false;
         return true;
     }
 
     public boolean executeUpdateQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern insertRegex = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)VALUES)[\\s]*[(](.+)[)]");
+        Pattern insertRegex = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]*((?i)VALUES)[\\s]*[(](.+)[)]");
         Pattern insertRegexWithCol = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]*[(](.+)[)][\\s]*((?i)VALUES)[\\s]*[(](.+)[)]");
         Matcher insertMatcher = insertRegex.matcher(query);
         Matcher insertMatcherWithCol = insertRegexWithCol.matcher(query);
