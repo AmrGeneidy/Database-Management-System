@@ -11,15 +11,15 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_]+)");
+        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
-        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_]+)");
+        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
-        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_]+)");
+        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
         Matcher crTMatcher1 = crTRegex1.matcher(query);
-        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_']+)([\\s]*)[(]([^)]+)[)]");
+        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)([\\s]*)[(]([^)]+)[)]");
         Matcher crTMatcher2 = crTRegex2.matcher(query);
-        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_']+)");
+        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"']+)");
         Matcher drTMatcher = drTRegex.matcher(query);
         if (crDBMatcher.find()) {
             map.put(returnType.NAME, crDBMatcher.group(5));
@@ -96,14 +96,12 @@ public class Parser {
         boolean insertWithColFind = insertMatcherWithCol.find();
 
         Pattern delRegex = Pattern.compile("((?i)DELETE)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})");
-        Pattern delRegexWithCondition = Pattern.compile("((?i)DELETE)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)WHERE)[\\s]+([^;])");
+        Pattern delRegexWithCondition = Pattern.compile("((?i)DELETE)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)WHERE)[\\s]+([^;]+)");
         Matcher delMatcher = delRegex.matcher(query);
         Matcher delMatcherWithCondition = delRegexWithCondition.matcher(query);
 
-        Pattern updateRegex = Pattern.compile("((?i)UPDATE)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)SET)[\\s]+([^;])");
-        Pattern updateRegexWithCondition = Pattern.compile("((?i)UPDATE)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)SET)[\\s]+([.]+)[\\s]+((?i)WHERE)[\\s]+([^;])");
+        Pattern updateRegex = Pattern.compile("((?i)UPDATE)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)SET)[\\s]+([^;]+)");
         Matcher updateMatcher = updateRegex.matcher(query);
-        Matcher updateMatcherWithCondition = updateRegexWithCondition.matcher(query);
         if (insertFind || insertWithColFind) {
             Matcher matcher;
             if (insertFind) matcher = insertMatcher;
@@ -135,15 +133,10 @@ public class Parser {
             map.put(returnType.NAME, updateMatcher.group(2));
             ArrayList<Object> column = new ArrayList<>();
             ArrayList<Object> value = new ArrayList<>();
-            boolean conditionFound = updateMatcherWithCondition.find();
-            if (conditionFound) {
-                updateSetter(updateMatcherWithCondition.group(4), column, value);
-            } else updateSetter(updateMatcher.group(4), column, value);
+            updateSetter(updateMatcher.group(4), column, value);
             if (column.isEmpty() || value.isEmpty()) return false;
             map.put(returnType.COLNAME, column.toArray());
             map.put(returnType.COLVALUES, value.toArray());
-            if (conditionFound)
-                conditionFinder(updateMatcherWithCondition.group(6));
             map.put(returnType.ISUPDATE, true);
             map.put(returnType.ISDELETE, false);
             map.put(returnType.ISINSERT, false);
@@ -198,6 +191,19 @@ public class Parser {
     }
 
     private void updateSetter(String s, ArrayList<Object> col, ArrayList<Object> val) {
+        String[] catchCondition;
+        Pattern where = Pattern.compile("(i?)WHERE");
+        Matcher whereMatcher = where.matcher(s);
+        int startIndex, endIndex;
+        if (whereMatcher.find()) {
+            startIndex = whereMatcher.start();
+            endIndex = whereMatcher.end();
+            catchCondition = new String[2];
+            catchCondition[0] = s.substring(0, startIndex);
+            catchCondition[1] = s.substring(endIndex + 1);
+            conditionFinder(catchCondition[1]);
+            s = catchCondition[0];
+        }
         Pattern regex = Pattern.compile("\'{0,1}[a-zA-Z0-9_]+\'{0,1}");
         Matcher matcher = regex.matcher(s);
         while (matcher.find()) {
