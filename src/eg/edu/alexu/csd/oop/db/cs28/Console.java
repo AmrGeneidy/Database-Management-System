@@ -69,7 +69,7 @@ public class Console {
 		textArea.setBackground(Color.BLACK);
 		textArea.setBounds(10, 11, 539, 369);
 		panel.setLayout(new BorderLayout());
-		JScrollPane scroll = new JScrollPane(textArea); // place the JTextArea in a scroll pane
+		JScrollPane scroll = new JScrollPane(textArea); 
 		panel.add(scroll, BorderLayout.CENTER);
 		panel.setBackground(Color.BLACK);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
