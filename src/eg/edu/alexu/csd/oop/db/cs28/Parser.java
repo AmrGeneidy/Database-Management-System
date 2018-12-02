@@ -13,13 +13,13 @@ public class Parser {
         map = new HashMap<>();
         Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
-        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
+        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
-        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
+        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher crTMatcher1 = crTRegex1.matcher(query);
-        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)([\\s]*)[(]([^)]+)[)]");
+        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)([\\s]*)[(]([^)]+)[)]");
         Matcher crTMatcher2 = crTRegex2.matcher(query);
-        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
+        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"'_]+)");
         Matcher drTMatcher = drTRegex.matcher(query);
         if (crDBMatcher.find()) {
             map.put(returnType.NAME, crDBMatcher.group(5));
@@ -119,6 +119,9 @@ public class Parser {
                 map.put(returnType.COLNAME, col.toArray());
             } else {
                 map.put(returnType.COLNAME, new Object[0]);
+            }
+            else {
+            	map.put(returnType.COLNAME, new Object[0]);
             }
             map.put(returnType.ISUPDATE, false);
             map.put(returnType.ISDELETE, false);
