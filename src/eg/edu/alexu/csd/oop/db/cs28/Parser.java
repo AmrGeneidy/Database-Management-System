@@ -12,6 +12,7 @@ public class Parser {
         boolean matched = false;
         map = new HashMap<>();
         Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
+        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
         Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
@@ -76,19 +77,20 @@ public class Parser {
                 if (sColArr.length == 0 || sColArr[0].replaceAll("\\s+", "").equals("")) return false;
                 map.put(returnType.COLNAME, sColArr);
             }
-            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)[\\s]+(.+)");
+            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)");
             Matcher selectConditionMatcher = selectConditionRegex.matcher(query);
             if (selectConditionMatcher.find()) {
-                if (!conditionFinder(selectConditionMatcher.group(6))) return false;
+                int conditionIndex = selectConditionMatcher.end();
+                if (!conditionFinder(query.substring(conditionIndex + 1).trim())) return false;
             }
-        }
+        } else return false;
         return true;
     }
 
     public boolean executeUpdateQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern insertRegex = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((?i)VALUES)[\\s]*[(](.+)[)]");
+        Pattern insertRegex = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]*((?i)VALUES)[\\s]*[(](.+)[)]");
         Pattern insertRegexWithCol = Pattern.compile("((?i)INSERT)[\\s]+((?i)INTO)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]*[(](.+)[)][\\s]*((?i)VALUES)[\\s]*[(](.+)[)]");
         Matcher insertMatcher = insertRegex.matcher(query);
         Matcher insertMatcherWithCol = insertRegexWithCol.matcher(query);
@@ -115,6 +117,8 @@ public class Parser {
             if (insertWithColFind) {
                 regexUpdateQuery(insertMatcherWithCol.group(4), col);
                 map.put(returnType.COLNAME, col.toArray());
+            } else {
+                map.put(returnType.COLNAME, new Object[0]);
             }
             else {
             	map.put(returnType.COLNAME, new Object[0]);
