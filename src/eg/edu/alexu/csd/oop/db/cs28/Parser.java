@@ -11,15 +11,15 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
+        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
-        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
+        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
-        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
+        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher crTMatcher1 = crTRegex1.matcher(query);
-        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
+        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)([\\s]*)[(]([^)]+)[)]");
         Matcher crTMatcher2 = crTRegex2.matcher(query);
-        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_/\\\\]+)");
+        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher drTMatcher = drTRegex.matcher(query);
         if (crDBMatcher.find()) {
             map.put(returnType.NAME, crDBMatcher.group(5));
@@ -76,10 +76,11 @@ public class Parser {
                 if (sColArr.length == 0 || sColArr[0].replaceAll("\\s+", "").equals("")) return false;
                 map.put(returnType.COLNAME, sColArr);
             }
-            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)[\\s]+(.+)");
+            Pattern selectConditionRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})[\\s]+((i?)WHERE)");
             Matcher selectConditionMatcher = selectConditionRegex.matcher(query);
             if (selectConditionMatcher.find()) {
-                if (!conditionFinder(selectConditionMatcher.group(6))) return false;
+                int conditionIndex = selectConditionMatcher.end();
+                if (!conditionFinder(query.substring(conditionIndex + 1).trim())) return false;
             }
         } else return false;
         return true;
