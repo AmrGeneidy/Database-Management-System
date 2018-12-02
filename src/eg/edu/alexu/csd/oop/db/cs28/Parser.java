@@ -11,7 +11,6 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_\\" + System.getProperty("file.separator") +"_]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
         Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
