@@ -354,7 +354,7 @@ public class SQLDatabase implements Database {
 		int rowsCount = 0;
 		Parser parser = new Parser();
 		if (!parser.executeUpdateQuery(query)) {
-			throw new SQLException();
+			throw new SQLException("Invalid Query!!");
 		}
 		HashMap<returnType, Object> map = parser.map;
 		String xmlPath = currentDatabase + System.getProperty("file.separator")

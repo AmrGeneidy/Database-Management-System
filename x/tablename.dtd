@@ -1,0 +1,2 @@
+<!ELEMENT row (x)>
+<!ELEMENT x varChar>

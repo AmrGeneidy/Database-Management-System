@@ -42,6 +42,7 @@ public class Parser {
                 String[] temp = nameAndType[i].trim().replaceAll("[\\s]+", " ").split(" ");
                 colName[i] = temp[0].trim();
                 colType[i] = temp[1].trim();
+                if(colType[i] != "varchar" && colType[i] != "int") return false;
             }
             if (colName.length == 0) return false;
             map.put(returnType.COLNAME, colName);
@@ -62,7 +63,7 @@ public class Parser {
 
     public boolean executeQuery(String query) {
         map = new HashMap<>();
-        Pattern selectRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'{0,1}[a-zA-Z0-9_]+\'{0,1})");
+        Pattern selectRegex = Pattern.compile("((?i)SELECT)[\\s]+(.+)[\\s]+((?i)FROM)[\\s]+(\'[.+]|\\d+\')");
         Matcher selectMatcher = selectRegex.matcher(query);
         if (selectMatcher.find()) {
             map.put(returnType.NAME, selectMatcher.group(4));
