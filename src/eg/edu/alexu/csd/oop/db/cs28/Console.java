@@ -74,6 +74,7 @@ public class Console {
 						textArea.setText(null);
 						begin = 0;
 					} else {
+						
 						try {
 							database.executeQuery(query);
 						} catch (Exception e) {
