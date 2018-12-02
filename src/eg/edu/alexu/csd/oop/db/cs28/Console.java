@@ -74,17 +74,7 @@ public class Console {
 		panel.setBackground(Color.BLACK);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 
-		if(data != null) {
-		try {
-			Table table = Table.loadNewTable(cDatabase + System.getProperty("file.separator")
-			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			textArea.setText(textArea.getText() + "\ntable is not found!");
-			begin = textArea.getText().length() + 1;
-			
-		}
-		}
+		
 		
 		
 		textArea.addKeyListener(new KeyAdapter() {
@@ -100,6 +90,12 @@ public class Console {
 						
 						try {
 							database.executeQuery(query);
+							if(query.toLowerCase().contains("select")) {
+								Object[][] t = sql.executeQuery(query);
+								
+								
+							}
+							
 						} catch (Exception e) {
 							// TODO: handle exception
 							textArea.setText(textArea.getText() + "\n" + e.getMessage());

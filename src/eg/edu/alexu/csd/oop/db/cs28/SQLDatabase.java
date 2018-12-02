@@ -97,7 +97,7 @@ public class SQLDatabase implements Database {
 	}
 	catch (Exception e) {
 		// TODO: handle exception
-		throw new RuntimeException("");
+		throw new RuntimeException("There is no data recorded!");
 		
 	}
 	
