@@ -15,6 +15,10 @@ import javax.management.RuntimeErrorException;
 public class SQLDatabase implements Database {
 
 	private String currentDatabase;
+	
+	public String getCurrentDataBase() {
+		return currentDatabase;
+	}
 
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {

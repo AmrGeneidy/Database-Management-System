@@ -9,10 +9,15 @@ import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import javax.swing.JTextArea;
+
+import eg.edu.alexu.csd.oop.db.cs28.Parser.returnType;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
+import java.util.HashMap;
 
 public class Console {
 
@@ -21,7 +26,9 @@ public class Console {
 	private int begin = 0;
 	private Facade database = new Facade(new SQLDatabase());
 	private Table table;
-
+	private String cDatabase;
+	private SQLDatabase sql = new SQLDatabase();
+	private Parser parser = new Parser();
 	/**
 	 * Launch the application.
 	 */
@@ -49,6 +56,9 @@ public class Console {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		HashMap<returnType, Object> data = parser.map;
+		cDatabase = sql.getCurrentDataBase();
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 575, 419);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,6 +74,19 @@ public class Console {
 		panel.setBackground(Color.BLACK);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
 
+		if(data != null) {
+		try {
+			Table table = Table.loadNewTable(cDatabase + System.getProperty("file.separator")
+			+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			textArea.setText(textArea.getText() + "\ntable is not found!");
+			begin = textArea.getText().length() + 1;
+			
+		}
+		}
+		
+		
 		textArea.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
