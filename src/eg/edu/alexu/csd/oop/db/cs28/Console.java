@@ -87,8 +87,9 @@ public class Console {
 						textArea.setText(null);
 						begin = 0;
 					} else {
-						database.executeQuery(query);
+						
 						try {
+							database.executeQuery(query);
 							if(query.toLowerCase().contains("select")) {
 								Object[][] t = database.getSelected();
 								
