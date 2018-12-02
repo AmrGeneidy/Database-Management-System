@@ -11,15 +11,15 @@ public class Parser {
     public boolean executeStructureQuery(String query) {
         boolean matched = false;
         map = new HashMap<>();
-        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern crDBRegex = Pattern.compile("((?i)CREATE)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher crDBMatcher = crDBRegex.matcher(query);
-        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern drDBRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)DATABASE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher drDBMatcher = drDBRegex.matcher(query);
-        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)");
+        Pattern crTRegex1 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)");
         Matcher crTMatcher1 = crTRegex1.matcher(query);
-        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"]+)([\\s]*)[(]([^)]+)[)]");
+        Pattern crTRegex2 = Pattern.compile("((?i)CREATE)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"_]+)([\\s]*)[(]([^)]+)[)]");
         Matcher crTMatcher2 = crTRegex2.matcher(query);
-        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+System.getProperty("file.separator")+"']+)");
+        Pattern drTRegex = Pattern.compile("((?i)DROP)([\\s]+)((?i)TABLE)([\\s]+)([A-Za-z0-9_"+"/\\\\"+"'_]+)");
         Matcher drTMatcher = drTRegex.matcher(query);
         if (crDBMatcher.find()) {
             map.put(returnType.NAME, crDBMatcher.group(5));
@@ -33,7 +33,7 @@ public class Parser {
             matched = true;
         } else if (crTMatcher1.find()) {
             map.put(returnType.NAME, crTMatcher1.group(5));
-            if (!crTMatcher2.find()) return true;
+            if (!crTMatcher2.find()) return false;
             query = crTMatcher2.group(7);
             String[] nameAndType = query.split(",");
             String[] colName = new String[nameAndType.length];
@@ -115,6 +115,9 @@ public class Parser {
             if (insertWithColFind) {
                 regexUpdateQuery(insertMatcherWithCol.group(4), col);
                 map.put(returnType.COLNAME, col.toArray());
+            }
+            else {
+            	map.put(returnType.COLNAME, new Object[0]);
             }
             map.put(returnType.ISUPDATE, false);
             map.put(returnType.ISDELETE, false);
