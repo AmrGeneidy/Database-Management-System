@@ -59,7 +59,7 @@ public class Console {
 		HashMap<returnType, Object> data = parser.map;
 		cDatabase = sql.getCurrentDataBase();
 		
-		frame = new JFrame();
+		frame = new JFrame("SQL Database System");
 		frame.setBounds(100, 100, 575, 419);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
