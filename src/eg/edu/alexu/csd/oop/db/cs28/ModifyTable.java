@@ -365,29 +365,4 @@ public class ModifyTable {
 		}
 		return operands;
 	}
-
-	//TODO delete this
-	public static Item[] readDTD(String path) {
-		BufferedReader reader = null;
-		Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
-		Matcher matcher = null;
-		ArrayList<Item> column = new ArrayList<Item>();
-		try {
-			reader = new BufferedReader(new FileReader(path));
-			reader.readLine();
-			String thisLine = reader.readLine();
-			while (thisLine != null) {
-				matcher = pattern.matcher(thisLine);
-				matcher.matches();
-				column.add(new Item(matcher.group(1), matcher.group(2)));
-				thisLine = reader.readLine();
-			}
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-
-		return column.toArray(new Item[column.size()]);
-	}
 }
