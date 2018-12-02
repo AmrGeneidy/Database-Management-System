@@ -42,7 +42,6 @@ public class Parser {
                 String[] temp = nameAndType[i].trim().replaceAll("[\\s]+", " ").split(" ");
                 colName[i] = temp[0].trim();
                 colType[i] = temp[1].trim();
-                if (colType[i] != "varchar" && colType[i] != "int") return false;
             }
             if (colName.length == 0) return false;
             map.put(returnType.COLNAME, colName);
