@@ -50,6 +50,7 @@ public class Console {
 	 */
 	public Console() {
 		initialize();
+		
 	}
 
 	/**
