@@ -141,6 +141,7 @@ public class SQLDatabase implements Database {
 		String secondComparator = conditionOperands[1];
 
 		boolean isNum = true;
+		
 		for (char c : secondComparator.toCharArray()) {
 			if (!Character.isDigit(c)) {
 				isNum = false;

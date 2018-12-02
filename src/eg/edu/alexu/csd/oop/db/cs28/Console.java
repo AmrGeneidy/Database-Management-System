@@ -50,16 +50,18 @@ public class Console {
 	 */
 	public Console() {
 		initialize();
+		
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
 	 */
 	private void initialize() {
 		HashMap<returnType, Object> data = parser.map;
 		cDatabase = sql.getCurrentDataBase();
 		
-		frame = new JFrame();
+		frame = new JFrame("SQL Database System");
 		frame.setBounds(100, 100, 575, 419);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		JPanel panel = new JPanel();
@@ -69,7 +71,7 @@ public class Console {
 		textArea.setBackground(Color.BLACK);
 		textArea.setBounds(10, 11, 539, 369);
 		panel.setLayout(new BorderLayout());
-		JScrollPane scroll = new JScrollPane(textArea); // place the JTextArea in a scroll pane
+		JScrollPane scroll = new JScrollPane(textArea); 
 		panel.add(scroll, BorderLayout.CENTER);
 		panel.setBackground(Color.BLACK);
 		frame.getContentPane().add(panel, BorderLayout.CENTER);
