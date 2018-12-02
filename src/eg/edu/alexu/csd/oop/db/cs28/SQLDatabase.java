@@ -89,8 +89,17 @@ public class SQLDatabase implements Database {
 	Parser parser = new Parser();
 	parser.executeQuery(query);
 	HashMap<returnType, Object> data = parser.map;
-	Table table = Table.loadNewTable(currentDatabase + System.getProperty("file.separator")
-	+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+	Table table = null;
+	try {
+		table = Table.loadNewTable(currentDatabase + System.getProperty("file.separator")
+		+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
+		
+	}
+	catch (Exception e) {
+		// TODO: handle exception
+		throw new RuntimeException("");
+		
+	}
 	
 	
 	String[] columnsArray = (String[]) data.get(returnType.COLNAME);
