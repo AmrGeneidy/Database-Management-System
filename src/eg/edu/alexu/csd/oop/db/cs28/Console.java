@@ -87,13 +87,12 @@ public class Console {
 						textArea.setText(null);
 						begin = 0;
 					} else {
-						
+						database.executeQuery(query);
 						try {
-							database.executeQuery(query);
 							if(query.toLowerCase().contains("select")) {
-								Object[][] t = sql.executeQuery(query);
+								Object[][] t = database.getSelected();
 								
-								
+								System.out.println(t);
 							}
 							
 						} catch (Exception e) {

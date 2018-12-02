@@ -6,9 +6,13 @@ import eg.edu.alexu.csd.oop.db.Database;
 
 public class Facade {
 	private Database database;
+	private Object[][] selected; 
 
 	public Facade(Database database) {
 		this.database = database;
+	}
+	public Object[][] getSelected (){
+		return this.selected;
 	}
 
 	public void executeQuery(String query) {
@@ -18,7 +22,7 @@ public class Facade {
 					throw new RuntimeException("couldn't excute the query due to error in file system");
 				}
 			} else if (query.toUpperCase().contains("SELECT")) {
-				database.executeQuery(query);
+				selected = database.executeQuery(query);
 			} else if (query.toUpperCase().contains("INSERT") || query.toUpperCase().contains("DELETE") || query.toUpperCase().contains("UPDATE")) {
 				database.executeUpdateQuery(query);
 			} else {
