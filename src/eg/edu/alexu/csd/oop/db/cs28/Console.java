@@ -92,7 +92,14 @@ public class Console {
 							if(query.toLowerCase().contains("select")) {
 								Object[][] t = database.getSelected();
 								
-								System.out.println(t);
+								for(int i = 0; i < t.length; i++) {
+									textArea.setText(textArea.getText() + "\n");
+									for(int j = 0; j < t[0].length; j++) {
+										textArea.setText(textArea.getText() + "		" + t[i][j]);
+									}
+								}
+								begin = textArea.getText().length() + 1;
+								
 							}
 							
 						} catch (Exception e) {

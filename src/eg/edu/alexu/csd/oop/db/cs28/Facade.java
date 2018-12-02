@@ -22,7 +22,13 @@ public class Facade {
 					throw new RuntimeException("couldn't excute the query due to error in file system");
 				}
 			} else if (query.toUpperCase().contains("SELECT")) {
+				try {
 				selected = database.executeQuery(query);
+				}
+				catch (Exception e) {
+					// TODO: handle exception
+					throw new RuntimeException("There is no data recorded!");
+				}
 			} else if (query.toUpperCase().contains("INSERT") || query.toUpperCase().contains("DELETE") || query.toUpperCase().contains("UPDATE")) {
 				database.executeUpdateQuery(query);
 			} else {
