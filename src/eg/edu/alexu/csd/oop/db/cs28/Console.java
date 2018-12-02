@@ -105,7 +105,12 @@ public class Console {
 							
 						} catch (Exception e) {
 							// TODO: handle exception
-							textArea.setText(textArea.getText() + "\n" + e.getMessage());
+							if(e.getMessage().equals(null)) {
+								textArea.setText(textArea.getText() + "\nInvalid Query!");
+							}
+							else {
+								textArea.setText(textArea.getText() + "\n" + e.getMessage());	
+							}
 							begin = textArea.getText().length() + 1;
 							
 						}
