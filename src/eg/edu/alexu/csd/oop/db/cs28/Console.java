@@ -54,6 +54,7 @@ public class Console {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * 
 	 */
 	private void initialize() {
 		HashMap<returnType, Object> data = parser.map;
