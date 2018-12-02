@@ -71,7 +71,7 @@ public class Console {
 					query = textArea.getText().substring(begin, textArea.getText().length());
 					begin = textArea.getText().length() + 1;
 					if (query.equalsIgnoreCase("clear")) {
-						textArea.setText("");
+						textArea.setText(null);
 						begin = 0;
 					} else {
 						try {
@@ -79,6 +79,8 @@ public class Console {
 						} catch (Exception e) {
 							// TODO: handle exception
 							textArea.setText(textArea.getText() + "\n" + e.getMessage());
+							begin = textArea.getText().length() + 1;
+							
 						}
 
 					}
