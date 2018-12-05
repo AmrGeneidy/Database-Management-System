@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -29,173 +30,170 @@ import eg.edu.alexu.csd.oop.db.cs28.Parser.returnType;
 
 public class Table {
 
-	private static Table singleTable;
+    private static Table singleTable;
 
-	private static String tableFullPathXML;
-	private static String tableFullPathDTD;
-	private static ArrayList<Record> tableData;
-	private static String[] colsNames;
-	private static String[] colsDataTypes;
+    private String tableFullPathXML;
+    private String tableFullPathDTD;
+    private ArrayList<Record> tableData;
+    private String[] colsNames;
+    private String[] colsDataTypes;
 
-	private Table() {
-	}
+    private Table() {
+    }
 
-	// clear Cache and get new instance
-	public static Table loadNewTable(String xmlPath) {
-		if (tableFullPathXML != null && xmlPath.equalsIgnoreCase(tableFullPathXML)) {
-			return singleTable;
-		}
-		if (singleTable != null) {
-			saveDataInXML();
-		}
-		singleTable = new Table();
-		tableFullPathXML = xmlPath;
-		tableFullPathDTD = getDTDPath();
-		boolean dataReoloaded = loadData();
-		if (!dataReoloaded) {
-			singleTable = null;
-		}
-		return singleTable;
-	}
+    // clear Cache and get new instance
+    public static Table loadNewTable(String xmlPath) throws SQLException {
+        if (singleTable == null) {
+            singleTable = new Table();
+        }
+        if (singleTable.tableFullPathXML != null && xmlPath.equalsIgnoreCase(singleTable.tableFullPathXML)) {
+            return singleTable;
+        }
+        singleTable.tableFullPathXML = xmlPath;
+        singleTable.tableFullPathDTD = singleTable.getDTDPath();
+        singleTable.loadData();
+        return singleTable;
+    }
 
-	// setters & getters
-	public ArrayList<Record> getTableData() {
-		return tableData;
-	}
+    // setters & getters
+    public ArrayList<Record> getTableData() {
+        return tableData;
+    }
 
-	public void setTableData(ArrayList<Record> tableData) {
-		Table.tableData = tableData;
-	}
+    public void setTableData(ArrayList<Record> tableData) {
+        this.tableData = tableData;
+    }
 
-	public String[] getColsNames() {
-		return colsNames;
-	}
+    public String[] getColsNames() {
+        return colsNames;
+    }
 
-	public String[] getColsDataTypes() {
-		return colsDataTypes;
-	}
+    public String[] getColsDataTypes() {
+        return colsDataTypes;
+    }
 
-	// MUST be called before finishing any method
-	public void save() {
-		saveDataInXML();
-	}
+    public int insert(HashMap<returnType, Object> map) throws SQLException {
+        ModifyTable m = new ModifyTable();
+        int ans = m.insert(singleTable, map);
+        if (ans != 0) {
+            saveDataInXML();
+        }
+        return ans;
+    }
 
-	// TODO convert to HashMap
-	public int insert(String[] colNames, String[] values) {
-		return ModifyTable.insert(singleTable, colNames, values);
-	}
+    public int update(HashMap<returnType, Object> map) throws SQLException {
+        ModifyTable m = new ModifyTable();
+        int ans = m.update(singleTable, map);
+        if (ans != 0) {
+            saveDataInXML();
+        }
+        return ans;
+    }
 
-	public int update(HashMap<returnType, Object> map) {
-		return ModifyTable.update(singleTable, map);
-	}
-	
-	public int delete(HashMap<returnType, Object> map) {
-		return ModifyTable.delete(singleTable, map);
-	}
+    public int delete(HashMap<returnType, Object> map) throws SQLException {
+        ModifyTable m = new ModifyTable();
+        int ans = m.delete(singleTable, map);
+        if (ans != 0) {
+            saveDataInXML();
+        }
+        return ans;
+    }
 
-	// save the data from table(cache) in xml file
-	private static void saveDataInXML() {
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			File file = new File(tableFullPathXML);
-			Document doc = builder.parse(file);
-			doc.getDocumentElement().normalize();
-			Element root = doc.getDocumentElement();
+    // save the data from table(cache) in xml file
+    private void saveDataInXML() throws SQLException {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            File file = new File(tableFullPathXML);
+            Document doc = builder.parse(file);
+            doc.getDocumentElement().normalize();
+            Element root = doc.getDocumentElement();
 
-			while (root.hasChildNodes()) {
-				root.removeChild(root.getFirstChild());
-			}
+            while (root.hasChildNodes()) {
+                root.removeChild(root.getFirstChild());
+            }
 
-			Element xmlRecord;
-			for (Record record : tableData) {
-				xmlRecord = doc.createElement("record");
-				for (int i = 0; i < record.length(); i++) {
-					Element tag = doc.createElement(colsNames[i]);
-					Text value = doc.createTextNode(record.getItem(i));
-					tag.appendChild(value);
-					xmlRecord.appendChild(tag);
-				}
-				root.appendChild(xmlRecord);
-			}
-			file.delete();
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(tableFullPathXML));
-			transformer.transform(source, result);
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SAXException | IOException e) {
-			// TODO table not found
-		} catch (TransformerException e) {
-			// TODO error while writing into file
-			e.printStackTrace();
-		}
+            Element xmlRecord;
+            for (Record record : tableData) {
+                xmlRecord = doc.createElement("record");
+                for (int i = 0; i < record.length(); i++) {
+                    Element tag = doc.createElement(colsNames[i]);
+                    Text value = doc.createTextNode(record.getItem(i));
+                    tag.appendChild(value);
+                    xmlRecord.appendChild(tag);
+                }
+                root.appendChild(xmlRecord);
+            }
+            file.delete();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(tableFullPathXML));
+            transformer.transform(source, result);
+        } catch (ParserConfigurationException | TransformerException e) {
+            throw new SQLException("Error while saving data into file!!");
+        } catch (SAXException | IOException e) {
+            throw new SQLException("Table NOT Found!!");
+        }
 
-	}
+    }
 
-	// fill colsNames & colsDataTypes
-	private static boolean readDTD() {
-		BufferedReader reader = null;
-		Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
-		Matcher matcher = null;
-		ArrayList<String> names = new ArrayList<>();
-		ArrayList<String> dataTypes = new ArrayList<>();
-		try {
-			reader = new BufferedReader(new FileReader(tableFullPathDTD));
-			reader.readLine();
-			String thisLine = reader.readLine();
-			while (thisLine != null) {
-				matcher = pattern.matcher(thisLine);
-				matcher.matches();
-				names.add(matcher.group(1));
-				dataTypes.add(matcher.group(2));
-				thisLine = reader.readLine();
-			}
-			colsNames = names.toArray(new String[names.size()]);
-			colsDataTypes = dataTypes.toArray(new String[dataTypes.size()]);
-			reader.close();
-		} catch (IOException e) {
-			// TODO DTD not found
-			System.out.println("DTD file not found");
-			return false;
-		}
-		return true;
-	}
+    // fill colsNames & colsDataTypes
+    private boolean readDTD() throws SQLException {
+        BufferedReader reader = null;
+        Pattern pattern = Pattern.compile("<!ELEMENT (\\S+) (\\S+)>");
+        Matcher matcher = null;
+        ArrayList<String> names = new ArrayList<>();
+        ArrayList<String> dataTypes = new ArrayList<>();
+        try {
+            reader = new BufferedReader(new FileReader(singleTable.tableFullPathDTD));
+            reader.readLine();
+            String thisLine = reader.readLine();
+            while (thisLine != null) {
+                matcher = pattern.matcher(thisLine);
+                matcher.matches();
+                names.add(matcher.group(1));
+                dataTypes.add(matcher.group(2));
+                thisLine = reader.readLine();
+            }
+            singleTable.colsNames = names.toArray(new String[names.size()]);
+            singleTable.colsDataTypes = dataTypes.toArray(new String[dataTypes.size()]);
+            reader.close();
+        } catch (IOException e) {
+            throw new SQLException("DTD file not found");
+        }
+        return true;
+    }
 
-	private static boolean loadData() {
-		boolean dataLoaded = readDTD();
-		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder;
-			builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new File(tableFullPathXML));
-			doc.getDocumentElement().normalize();
-			NodeList nList = doc.getElementsByTagName("record");
-			tableData = new ArrayList<Record>();
-			String[] record = new String[colsNames.length];
-			for (int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					for (int j = 0; j < colsNames.length; j++) {
-						Element eElement = (Element) nNode;
-						String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
-						record[j] = value;
-					}
-					tableData.add(i, new Record(record));
-				}
-			}
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			// TODO Auto-generated catch block
-			dataLoaded = false;
-		}
-		return dataLoaded;
-	}
+    private void loadData() throws SQLException {
+        singleTable.readDTD();
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder;
+            builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new File(tableFullPathXML));
+            doc.getDocumentElement().normalize();
+            NodeList nList = doc.getElementsByTagName("record");
+            tableData = new ArrayList<Record>();
+            String[] record = new String[colsNames.length];
+            for (int i = 0; i < nList.getLength(); i++) {
+                Node nNode = nList.item(i);
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                    for (int j = 0; j < colsNames.length; j++) {
+                        Element eElement = (Element) nNode;
+                        String value = eElement.getElementsByTagName(colsNames[j]).item(0).getTextContent();
+                        record[j] = value;
+                    }
+                    tableData.add(i, new Record(record));
+                }
+            }
+        } catch (ParserConfigurationException | SAXException | IOException e) {
+            throw new SQLException("XML file not found");
+        }
+    }
 
-	private static String getDTDPath() {
-		String ans = tableFullPathXML.substring(0, tableFullPathXML.length() - 3) + "dtd";
-		return ans;
-	}
+    private String getDTDPath() {
+        String ans = tableFullPathXML.substring(0, tableFullPathXML.length() - 3) + "dtd";
+        return ans;
+    }
 }
