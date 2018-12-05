@@ -244,5 +244,6 @@ public class SanityTest {
 		} catch (Throwable e){
 			TestRunner.fail("Failed to complete scenario 3", e);
 		}
+
 	}
 }
