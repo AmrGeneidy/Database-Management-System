@@ -13,13 +13,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 
-import eg.edu.alexu.csd.oop.test.TestRunner;
+import eg.edu.alexu.csd.oop.TestRunner;
 
 
 public class SanityTest {
    
     private Connection createDatabase(String databaseName, boolean drop) throws SQLException{
-        Driver driver = (Driver)eg.edu.alexu.csd.oop.test.TestRunner.getImplementationInstanceForInterface(Driver.class);
+        Driver driver = (Driver)eg.edu.alexu.csd.oop.TestRunner.getImplementationInstanceForInterface(Driver.class);
         Properties info = new Properties();
         File dbDir = new File("sample" + System.getProperty("file.separator") + ((int)(Math.random() * 100000)));
         info.put("path", dbDir.getAbsoluteFile());

@@ -12,7 +12,7 @@ public class IntegrationTest {
     
     @Test
     public void test() {
-        Assert.assertNotNull("Failed to create DBMS implemenation",  (Database)eg.edu.alexu.csd.oop.test.TestRunner.getImplementationInstanceForInterface(Database.class));
+        Assert.assertNotNull("Failed to create DBMS implemenation",  (Database)eg.edu.alexu.csd.oop.TestRunner.getImplementationInstanceForInterface(Database.class));
     }
 
 }

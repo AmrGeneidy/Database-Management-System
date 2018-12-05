@@ -1,10 +1,9 @@
 package eg.edu.alexu.csd.oop.test.jdbc;
 import java.sql.Driver;
 
+import eg.edu.alexu.csd.oop.TestRunner;
 import org.junit.Assert;
 import org.junit.Test;
-
-import eg.edu.alexu.csd.oop.test.TestRunner;
 
 
 public class IntegrationTest {
@@ -15,7 +14,7 @@ public class IntegrationTest {
     
     @Test
     public void test() {
-        Assert.assertNotNull("Failed to create Driver implemenation",  (Driver)TestRunner.getImplementationInstanceForInterface(Driver.class));
+        Assert.assertNotNull("Failed to create Driver implemenation",  (Driver) TestRunner.getImplementationInstanceForInterface(Driver.class));
     }
 
 }
