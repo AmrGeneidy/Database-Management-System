@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import eg.edu.alexu.csd.oop.TestRunner;
 import eg.edu.alexu.csd.oop.db.Database;
-import eg.edu.alexu.csd.oop.test.TestRunner;
 
 public class SmokeTest {
 
