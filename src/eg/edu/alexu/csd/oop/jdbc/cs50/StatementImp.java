@@ -6,7 +6,15 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
+import eg.edu.alexu.csd.oop.db.Database;
+
 public class StatementImp implements Statement {
+
+	private Database database;
+
+	public StatementImp(Database database) {
+		this.database = database;
+	}
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -22,14 +30,15 @@ public class StatementImp implements Statement {
 
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
-		// TODO Auto-generated method stub
+		// TODO not finished yet
+		this.database.executeQuery(sql);			
 		return null;
 	}
 
 	@Override
 	public int executeUpdate(String sql) throws SQLException {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.database.executeUpdateQuery(sql);
 	}
 
 	@Override
@@ -107,7 +116,7 @@ public class StatementImp implements Statement {
 	@Override
 	public boolean execute(String sql) throws SQLException {
 		// TODO Auto-generated method stub
-		return false;
+		return this.database.executeStructureQuery(sql);
 	}
 
 	@Override
