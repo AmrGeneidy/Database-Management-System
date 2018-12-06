@@ -115,8 +115,21 @@ public class StatementImp implements Statement {
 
 	@Override
 	public boolean execute(String sql) throws SQLException {
-		// TODO Auto-generated method stub
-		return this.database.executeStructureQuery(sql);
+		// TODO: handle return
+			if (sql.toUpperCase().contains("CREATE") || sql.toUpperCase().contains("DROP")) {
+				if (!database.executeStructureQuery(sql)) {
+					throw new SQLException("couldn't excute the query due to error in file system");
+				}
+			} else if (sql.toUpperCase().contains("SELECT"))
+				 database.executeQuery(sql);
+				
+			else if (sql.toUpperCase().contains("INSERT") || sql.toUpperCase().contains("DELETE") || sql.toUpperCase().contains("UPDATE")) {
+				database.executeUpdateQuery(sql);
+			} else {
+				throw new SQLException("Invalid Query!!");
+			}
+		
+		return true;
 	}
 
 	@Override
