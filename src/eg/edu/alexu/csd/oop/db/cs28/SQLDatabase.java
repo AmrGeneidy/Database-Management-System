@@ -66,7 +66,12 @@ public class SQLDatabase implements Database {
 			currentDatabasePath = path;
 			return true;
 		} else if ((boolean) map.get(returnType.ISDATABASE) && !(boolean) map.get(returnType.ISCREATE)) {
-			String path = ((String) map.get(returnType.NAME)).toLowerCase();
+			String path;
+			if (workSpace != null) {
+				path = workSpace + System.getProperty("file.separator")
+						+ ((String) map.get(returnType.NAME)).toLowerCase();
+			}else
+				path = ((String) map.get(returnType.NAME)).toLowerCase();
 			handler.deleteDatabase(path);
 			return true;
 		} else if (currentDatabasePath == null) {
