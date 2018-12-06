@@ -25,10 +25,8 @@ public class Console {
 	private String query;
 	private int begin = 0;
 	private Facade database = new Facade(new SQLDatabase());
-	private Table table;
-	private String cDatabase;
-	private SQLDatabase sql = new SQLDatabase();
-	private Parser parser = new Parser();
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -58,9 +56,6 @@ public class Console {
 	 * 
 	 */
 	private void initialize() {
-		HashMap<returnType, Object> data = parser.map;
-		cDatabase = sql.getCurrentDataBase();
-		
 		frame = new JFrame("SQL Database System");
 		frame.setBounds(100, 100, 575, 419);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
