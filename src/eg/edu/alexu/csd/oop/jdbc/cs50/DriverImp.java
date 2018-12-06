@@ -12,14 +12,16 @@ public class DriverImp implements Driver {
 
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Connection x = new ConnectionImp();
+		return x;
 	}
 
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
-		// TODO Auto-generated method stub
-		return false;
+		if(url.equalsIgnoreCase("jdbc:xmldb://localhost"))
+			return true;
+		else
+			return false;
 	}
 
 	@Override
