@@ -26,8 +26,7 @@ public class DriverImp implements Driver {
 		if (acceptsURL(url)) {
 			File dir = (File) info.get("path");
 			String path = dir.getAbsolutePath();
-			Database database = new SQLDatabase();
-			database.createDatabase(path, false);
+			Database database = new SQLDatabase(path);
 			x = new ConnectionImp(database,info);
 			//connections.add(x);
 		} else {
