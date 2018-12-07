@@ -31,7 +31,7 @@ public class StatementImp implements Statement {
 	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
 		// TODO not finished yet
-		this.database.executeQuery(sql);			
+		this.database.executeQuery(sql);
 		return null;
 	}
 
@@ -116,20 +116,7 @@ public class StatementImp implements Statement {
 	@Override
 	public boolean execute(String sql) throws SQLException {
 		// TODO: handle return
-			if (sql.toUpperCase().contains("CREATE") || sql.toUpperCase().contains("DROP")) {
-				if (!database.executeStructureQuery(sql)) {
-					throw new SQLException("couldn't excute the query due to error in file system");
-				}
-			} else if (sql.toUpperCase().contains("SELECT"))
-				 database.executeQuery(sql);
-				
-			else if (sql.toUpperCase().contains("INSERT") || sql.toUpperCase().contains("DELETE") || sql.toUpperCase().contains("UPDATE")) {
-				database.executeUpdateQuery(sql);
-			} else {
-				throw new SQLException("Invalid Query!!");
-			}
-		
-		return true;
+		return database.executeStructureQuery(sql);
 	}
 
 	@Override
