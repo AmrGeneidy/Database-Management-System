@@ -45,7 +45,7 @@ public class ConnectionImp implements Connection {
 
 	@Override
 	public Statement createStatement() throws SQLException {
-		Statement x = new StatementImp(this.database);
+		Statement x = new StatementImp(this,this.database);
 		return x;
 	}
 

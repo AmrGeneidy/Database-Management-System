@@ -17,6 +17,7 @@ public class DriverImp implements Driver {
 	//Pool
 	private List<Connection> connections;
 	
+	// we must support    Class.forName("foo.bah.Driver")
 
 	// limited number of connections (Pool)
 	@Override
