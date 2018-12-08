@@ -19,7 +19,17 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+import eg.edu.alexu.csd.oop.db.Database;
+
 public class ConnectionImp implements Connection {
+
+	private Database database;
+	private Properties info;
+
+	public ConnectionImp(Database database, Properties info) {
+		this.database = database;
+		this.info = info;
+	}
 
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
@@ -35,8 +45,8 @@ public class ConnectionImp implements Connection {
 
 	@Override
 	public Statement createStatement() throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		Statement x = new StatementImp(this,this.database);
+		return x;
 	}
 
 	@Override
@@ -115,7 +125,6 @@ public class ConnectionImp implements Connection {
 	public void setCatalog(String catalog) throws SQLException {
 		throw new UnsupportedOperationException();
 
-
 	}
 
 	@Override
@@ -145,7 +154,6 @@ public class ConnectionImp implements Connection {
 	@Override
 	public void clearWarnings() throws SQLException {
 		throw new UnsupportedOperationException();
-
 
 	}
 

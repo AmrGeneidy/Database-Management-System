@@ -40,7 +40,10 @@ public class Table {
 
 	private Table() {
 	}
-
+	public String getTableName() {
+		return tableFullPathDTD.substring(tableFullPathDTD.lastIndexOf(System.getProperty("file.separator")) + System.getProperty("file.separator").length(),tableFullPathDTD.length()-4);
+		
+	}
 	// clear Cache and get new instance
 	public static Table loadNewTable(String xmlPath) throws SQLException {
 		if (singleTable == null) {

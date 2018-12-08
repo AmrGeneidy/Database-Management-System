@@ -2,9 +2,13 @@ package eg.edu.alexu.csd.oop.jdbc.cs50;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
+
 
 public class ResultSetMetaDataImp implements ResultSetMetaData {
-
+	private String TableName;
+	private String[] ColName ;
+	private Types[] ColType ;
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		throw new UnsupportedOperationException();

@@ -25,9 +25,12 @@ public class FoldersAndFilesHandler {
 	public void deleteDatabase(String path) {
 		File dir = new File(path);
 		File[] listFiles = dir.listFiles();
-		for (File file : listFiles) {
-			file.delete();
+		if (listFiles != null) {
+			for (File file : listFiles) {
+				file.delete();
+			}
 		}
+		
 		dir.delete();
 	}
 
