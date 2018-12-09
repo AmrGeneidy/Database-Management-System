@@ -8,7 +8,14 @@ import java.sql.Types;
 public class ResultSetMetaDataImp implements ResultSetMetaData {
 	private String TableName;
 	private String[] ColName ;
-	private Types[] ColType ;
+	private int[] ColType ;
+	
+	public ResultSetMetaDataImp(String tableName, String[] colName, int[] colType) {
+		TableName = tableName;
+		ColName = colName;
+		ColType = colType;
+	}
+
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		throw new UnsupportedOperationException();

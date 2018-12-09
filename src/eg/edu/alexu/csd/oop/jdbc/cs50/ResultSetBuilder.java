@@ -1,0 +1,43 @@
+package eg.edu.alexu.csd.oop.jdbc.cs50;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Types;
+
+import eg.edu.alexu.csd.oop.db.Database;
+
+public class ResultSetBuilder {
+	private Database db;
+	private String query;
+	
+	public void setDb(Database db) {
+		this.db = db;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+	
+	public void getQuery(String query) {
+		this.query = query;
+	}
+
+	public ResultSet build() throws SQLException {
+		Object [][] set = db.executeQuery(query);
+		String tableName = db.getTableName();
+		String [] colName = db.getColName();
+		String [] colType = db.getColTypes();
+		int [] cType = new int[colType.length];
+		for (int i = 0; i < cType.length; i++) {
+			if (colType[i].equalsIgnoreCase("varchar") ) {
+				cType[i] = Types.VARCHAR; 
+			}else {
+				cType[i] = Types.INTEGER;
+			}
+		}
+		ResultSetMetaData  metaData = new ResultSetMetaDataImp(tableName, colName, cType);
+		return new ResultsetImp(set,metaData);
+		
+	}
+}
