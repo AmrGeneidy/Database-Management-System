@@ -37,7 +37,7 @@ public class ResultSetBuilder {
 			}
 		}
 		ResultSetMetaData  metaData = new ResultSetMetaDataImp(tableName, colName, cType);
-		return new ResultsetImp(set,metaData);
+		return new ResultsetImp(set,metaData, query);
 		
 	}
 }

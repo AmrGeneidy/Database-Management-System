@@ -58,7 +58,6 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		checkIfTimeout();
 		// TODO not finished yet
-		this.database.executeQuery(sql);
 		return null;
 	}
 
