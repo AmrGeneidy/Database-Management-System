@@ -6,14 +6,14 @@ import java.sql.Types;
 
 
 public class ResultSetMetaDataImp implements ResultSetMetaData {
-    private String TableName;
-    private String[] ColName;
-    private int[] ColType;
+    private String tableName;
+    private String[] colName;
+    private int[] colType;
 
     public ResultSetMetaDataImp(String tableName, String[] colName, int[] colType) {
-        TableName = tableName;
-        ColName = colName;
-        ColType = colType;
+        this.tableName = tableName;
+        this.colName = colName;
+        this.colType = colType;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     @Override
     public int getColumnCount() throws SQLException {
         // TODO Auto-generated method stub
-        return 0;
+        return colName.length;
     }
 
     @Override
@@ -70,13 +70,13 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     @Override
     public String getColumnLabel(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return null;
+        return colName[column - 1];
     }
 
     @Override
     public String getColumnName(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return null;
+        return colName[column - 1];
     }
 
     @Override
@@ -97,7 +97,7 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     @Override
     public String getTableName(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return null;
+        return tableName;
     }
 
     @Override
@@ -108,13 +108,21 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     @Override
     public int getColumnType(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return 0;
+        return colType[column - 1];
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return null;
+        switch (colType[column]) {
+            case Types.INTEGER:
+                return "int";
+            case Types.VARCHAR:
+                return "varchar";
+            default:
+                System.out.println("Couldn't Identify ColType in metadata");
+                return null;
+        }
     }
 
     @Override
