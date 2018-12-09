@@ -3,6 +3,7 @@ package eg.edu.alexu.csd.oop.jdbc.cs50;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 
 import eg.edu.alexu.csd.oop.db.Database;
@@ -10,7 +11,12 @@ import eg.edu.alexu.csd.oop.db.Database;
 public class ResultSetBuilder {
 	private Database db;
 	private String query;
+	private Statement statement;
 	
+	public void setStatement(Statement statement) {
+		this.statement = statement;
+	}
+
 	public void setDb(Database db) {
 		this.db = db;
 	}
@@ -37,7 +43,7 @@ public class ResultSetBuilder {
 			}
 		}
 		ResultSetMetaData  metaData = new ResultSetMetaDataImp(tableName, colName, cType);
-		return new ResultsetImp(set,metaData, query);
+		return new ResultsetImp(set,metaData, statement);
 		
 	}
 }
