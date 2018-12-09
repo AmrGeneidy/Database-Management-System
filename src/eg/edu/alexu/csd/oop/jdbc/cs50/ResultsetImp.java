@@ -24,6 +24,10 @@ import java.util.Map;
 
 public class ResultsetImp implements ResultSet {
 
+	public ResultsetImp(Object[][] set, ResultSetMetaData metaData) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		throw new UnsupportedOperationException();
