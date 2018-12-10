@@ -103,6 +103,7 @@ public class SQLDatabase implements Database {
 		parser.executeQuery(query);
 		HashMap<returnType, Object> data = parser.map;
 		Table table = null;
+		
 		try {
 			table = Table.loadNewTable(currentDatabasePath + System.getProperty("file.separator")
 					+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
@@ -307,5 +308,23 @@ public class SQLDatabase implements Database {
 		}
 
 		return rowsCount;
+	}
+
+	@Override
+	public String getTableName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] getColTypes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] getColName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

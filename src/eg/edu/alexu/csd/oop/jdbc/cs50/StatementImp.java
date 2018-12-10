@@ -58,7 +58,6 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		checkIfTimeout();
 		// TODO not finished yet
-		this.database.executeQuery(sql);
 		return null;
 	}
 
@@ -213,7 +212,7 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		boolean containsInsert = sql.toLowerCase().contains("insert");
 		boolean containsUpdate = sql.toLowerCase().contains("update");
-		// TODO if error exists in syntax don't add to batch
+		// TODO done
 		if (containsInsert || containsUpdate) {
 			batch.add(sql);
 		} else {

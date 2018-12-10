@@ -52,4 +52,7 @@ public interface Database {
 	 *             syntax error
 	 */
 	public int executeUpdateQuery(String query) throws java.sql.SQLException;
+	public String getTableName();
+	public String[] getColTypes();
+	public String[] getColName();
 }
