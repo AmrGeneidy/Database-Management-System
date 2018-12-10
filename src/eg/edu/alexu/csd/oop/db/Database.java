@@ -53,6 +53,7 @@ public interface Database {
 	 */
 	public int executeUpdateQuery(String query) throws java.sql.SQLException;
 	public String getTableName();
+	public Database getDatabase();
 	public String[] getColTypes();
 	public String[] getColName();
 }

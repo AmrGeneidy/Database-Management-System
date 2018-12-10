@@ -34,12 +34,12 @@ public class ResultSetBuilder {
 		String tableName = db.getTableName();
 		String [] colName = db.getColName();
 		String [] colType = db.getColTypes();
-		int [] cType = new int[colType.length];
+		String [] cType = new String[colType.length];
 		for (int i = 0; i < cType.length; i++) {
 			if (colType[i].equalsIgnoreCase("varchar") ) {
-				cType[i] = Types.VARCHAR; 
+				cType[i] = "varchar";
 			}else {
-				cType[i] = Types.INTEGER;
+				cType[i] = "int";
 			}
 		}
 		ResultSetMetaData  metaData = new ResultSetMetaDataImp(tableName, colName, cType);

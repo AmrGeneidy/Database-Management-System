@@ -26,7 +26,7 @@ import java.util.Map;
 public class ResultsetImp implements ResultSet {
     private ResultSetMetaData metaData;
     private Object[][] set;
-    private int rowCounter = -1;
+    private int cursor = -1;
     private boolean closeStatus = false;
     private HashMap<String, Integer> colLabelIndex;
     private Statement statement;
@@ -38,7 +38,7 @@ public class ResultsetImp implements ResultSet {
         this.statement = statement;
         colLabelIndex = new HashMap<>();
         for (int i = 0; i < metaData.getColumnCount(); i++) {
-            colLabelIndex.put(metaData.getColumnName(i), i);
+            colLabelIndex.put(metaData.getColumnName(i+1), i);
         }
     }
 
@@ -56,8 +56,8 @@ public class ResultsetImp implements ResultSet {
     public boolean next() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        if (rowCounter == set.length - 1) return false;
-        rowCounter++;
+        if (cursor == set.length - 1) return false;
+        cursor++;
         return true;
     }
 
@@ -75,8 +75,8 @@ public class ResultsetImp implements ResultSet {
     @Override
     public String getString(int columnIndex) throws SQLException {
         // TODO Auto-generated method stub
-        if (isClosed() || rowCounter == -1 || columnIndex - 1>= set[rowCounter].length) throw new SQLException();
-        return (String) set[rowCounter][columnIndex - 1];
+        if (isClosed() || cursor == -1 || columnIndex - 1>= set[cursor].length) throw new SQLException();
+        return (String) set[cursor][columnIndex - 1];
     }
 
     @Override
@@ -97,8 +97,8 @@ public class ResultsetImp implements ResultSet {
     @Override
     public int getInt(int columnIndex) throws SQLException {
         // TODO Auto-generated method stub
-        if (isClosed() || rowCounter == -1 || columnIndex - 1 >= set[rowCounter].length) throw new SQLException();
-        return Integer.parseInt((String) set[rowCounter][columnIndex - 1]);
+        if (isClosed() || cursor == -1 || columnIndex - 1 >= set[cursor].length) throw new SQLException();
+        return Integer.parseInt((String) set[cursor][columnIndex - 1]);
     }
 
     @Override
@@ -159,9 +159,9 @@ public class ResultsetImp implements ResultSet {
     @Override
     public String getString(String columnLabel) throws SQLException {
         // TODO Auto-generated method stub
-        if (isClosed() || rowCounter == -1 || !colLabelIndex.containsKey(columnLabel)) throw new SQLException();
+        if (isClosed() || cursor == -1 || !colLabelIndex.containsKey(columnLabel)) throw new SQLException();
         int index = colLabelIndex.get(columnLabel);
-        return (String) set[rowCounter][index];
+        return (String) set[cursor][index];
     }
 
     @Override
@@ -182,9 +182,9 @@ public class ResultsetImp implements ResultSet {
     @Override
     public int getInt(String columnLabel) throws SQLException {
         // TODO Auto-generated method stub
-        if (isClosed()|| rowCounter == -1 || !colLabelIndex.containsKey(columnLabel)) throw new SQLException();
+        if (isClosed()|| cursor == -1 || !colLabelIndex.containsKey(columnLabel)) throw new SQLException();
         int index = colLabelIndex.get(columnLabel);
-        return Integer.parseInt((String) set[rowCounter][index]);
+        return Integer.parseInt((String) set[cursor][index]);
     }
 
     @Override
@@ -267,8 +267,8 @@ public class ResultsetImp implements ResultSet {
     @Override
     public Object getObject(int columnIndex) throws SQLException {
         // TODO Auto-generated method stub
-        if (isClosed() || rowCounter == -1 || columnIndex - 1 >= set[rowCounter].length) throw new SQLException();
-        return set[rowCounter][columnIndex - 1];
+        if (isClosed() || cursor == -1 || columnIndex - 1 >= set[cursor].length) throw new SQLException();
+        return set[cursor][columnIndex - 1];
     }
 
     @Override
@@ -308,42 +308,42 @@ public class ResultsetImp implements ResultSet {
     public boolean isBeforeFirst() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        return rowCounter == -1;
+        return cursor == -1;
     }
 
     @Override
     public boolean isAfterLast() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        return rowCounter == set.length;
+        return cursor == set.length;
     }
 
     @Override
     public boolean isFirst() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        return rowCounter == 0;
+        return cursor == 0;
     }
 
     @Override
     public boolean isLast() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        return rowCounter == set.length - 1;
+        return cursor == set.length - 1;
     }
 
     @Override
     public void beforeFirst() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        rowCounter = -1;
+        cursor = -1;
     }
 
     @Override
     public void afterLast() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        rowCounter = set.length;
+        cursor = set.length;
     }
 
     @Override
@@ -351,7 +351,7 @@ public class ResultsetImp implements ResultSet {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
         if(set == null) return false;
-        rowCounter = 0;
+        cursor = 0;
         return true;
     }
 
@@ -360,7 +360,7 @@ public class ResultsetImp implements ResultSet {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
         if(set == null) return false;
-        rowCounter = set.length - 1;
+        cursor = set.length - 1;
         return true;
     }
 
@@ -374,20 +374,20 @@ public class ResultsetImp implements ResultSet {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
         if(row > set.length) {
-            rowCounter = set.length;
+            cursor = set.length;
             return false;
         } else if(row * -1 > set.length) {
-            rowCounter = -1;
+            cursor = -1;
             return false;
         }
         if(row > 0) {
-            rowCounter = row - 1;
+            cursor = row - 1;
             return true;
         } else if(row < 0){
-            rowCounter = set.length + row;
+            cursor = set.length + row;
             return true;
         } else {
-            rowCounter = -1;
+            cursor = -1;
             return true;
         }
     }
@@ -401,8 +401,8 @@ public class ResultsetImp implements ResultSet {
     public boolean previous() throws SQLException {
         // TODO Auto-generated method stub
         if(isClosed()) throw new SQLException();
-        if (rowCounter == -1) return false;
-        rowCounter--;
+        if (cursor == -1) return false;
+        cursor--;
         return true;
     }
 
