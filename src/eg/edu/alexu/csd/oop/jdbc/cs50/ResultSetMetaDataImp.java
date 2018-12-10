@@ -8,9 +8,9 @@ import java.sql.Types;
 public class ResultSetMetaDataImp implements ResultSetMetaData {
     private String tableName;
     private String[] colName;
-    private int[] colType;
+    private String[] colType;
 
-    public ResultSetMetaDataImp(String tableName, String[] colName, int[] colType) {
+    public ResultSetMetaDataImp(String tableName, String[] colName, String[] colType) {
         this.tableName = tableName;
         this.colName = colName;
         this.colType = colType;
@@ -108,22 +108,20 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
     @Override
     public int getColumnType(int column) throws SQLException {
         // TODO Auto-generated method stub
-        return colType[column - 1];
+        switch(colName[column]) { 
+        case "int":
+        	return Types.INTEGER;
+        case "varchar":
+        	return Types.VARCHAR;
+        }
+		return 0;
     }
 
     @Override
     public String getColumnTypeName(int column) throws SQLException {
         // TODO Auto-generated method stub
-        switch (colType[column]) {
-            case Types.INTEGER:
-                return "int";
-            case Types.VARCHAR:
-                return "varchar";
-            default:
-                System.out.println("Couldn't Identify ColType in metadata");
-                return null;
+                return colType[column];
         }
-    }
 
     @Override
     public boolean isReadOnly(int column) throws SQLException {

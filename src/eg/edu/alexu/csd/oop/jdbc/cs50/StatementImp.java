@@ -57,8 +57,11 @@ public class StatementImp implements Statement {
 	public ResultSet executeQuery(String sql) throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
-		// TODO not finished yet
-		return null;
+		database.executeQuery(sql);
+		ResultSetMetaDataImp resultMetaData = new ResultSetMetaDataImp(database.getTableName(),
+				database.getColName(), this.database.getColTypes());
+		ResultSet result = new ResultsetImp(database.executeQuery(sql) , resultMetaData, this);
+		return result;
 	}
 
 	@Override
