@@ -6,7 +6,7 @@ import java.sql.Driver;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.List;
+import java.util.Enumeration;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -14,28 +14,22 @@ import eg.edu.alexu.csd.oop.db.Database;
 import eg.edu.alexu.csd.oop.db.cs28.SQLDatabase;
 
 public class DriverImp implements Driver {
-	//Pool
-	private List<Connection> connections;
 	
-	// we must support    Class.forName("foo.bah.Driver")
-
-	// limited number of connections (Pool)
+	private Properties info;
+	
+	//TODO  we must support Class.forName("foo.bah.Driver")
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
-		//TODO temp implementation
-		Connection x;
 		if (acceptsURL(url)) {
+			this.info = info;
 			File dir = (File) info.get("path");
 			String path = dir.getAbsolutePath();
 			Database database = new SQLDatabase(path);
-			x = new ConnectionImp(database,info);
-			//connections.add(x);
+			return new ConnectionImp(database, info);
 		} else {
-			// TODO add log and exception message
-			throw new SQLException();
+			throw new SQLException("Couldn't connect to database !!");
 		}
 
-		return x;
 	}
 
 	@Override
@@ -48,8 +42,22 @@ public class DriverImp implements Driver {
 
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			if (acceptsURL(url)) {
+				DriverPropertyInfo[] x = new DriverPropertyInfo[info.size()];
+			    Enumeration<?> e = info.propertyNames();
+				for (int i = 0; i < x.length; i++) {
+			        String key = (String) e.nextElement();
+					x[i] = new DriverPropertyInfo(key, this.info.getProperty(key));
+				}
+				return x;
+			} else {
+				throw new SQLException("Couldn't connect to database !!");
+			}
+		} catch (Exception e) {
+			throw new SQLException("Couldn't get Driver Property Info !!");
+		}
+		
 	}
 
 	@Override

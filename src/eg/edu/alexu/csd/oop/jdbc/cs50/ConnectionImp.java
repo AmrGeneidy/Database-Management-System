@@ -25,12 +25,20 @@ public class ConnectionImp implements Connection {
 
 	private Database database;
 	private Properties info;
+	private boolean isClosed;
 
 	public ConnectionImp(Database database, Properties info) {
 		this.database = database;
 		this.info = info;
+		isClosed = false;
 	}
 
+	private void checkIfClosed() throws SQLException {
+		if (isClosed) {
+			throw new SQLException("This statement is closed!!");
+		}
+	}
+	
 	@Override
 	public <T> T unwrap(Class<T> iface) throws SQLException {
 		throw new UnsupportedOperationException();
@@ -45,6 +53,7 @@ public class ConnectionImp implements Connection {
 
 	@Override
 	public Statement createStatement() throws SQLException {
+		checkIfClosed();
 		Statement x = new StatementImp(this,this.database);
 		return x;
 	}
@@ -93,8 +102,9 @@ public class ConnectionImp implements Connection {
 
 	@Override
 	public void close() throws SQLException {
-		// TODO Auto-generated method stub
-
+		this.database = null;
+		this.info = null;
+		this.isClosed = true;
 	}
 
 	@Override
