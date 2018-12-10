@@ -8,8 +8,11 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.db.Database;
+import sun.util.logging.resources.logging;
 
 //TODO need revision
 public class StatementImp implements Statement {
@@ -73,6 +76,8 @@ public class StatementImp implements Statement {
 
 	@Override
 	public void close() throws SQLException {
+		Logger logger = Log.getLoggeer();
+		logger.info("closing Statement");
 		database = null;
 		connection = null;
 		batch = null;

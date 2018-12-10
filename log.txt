@@ -1,0 +1,76 @@
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:04 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:05 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:05 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:05 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:05 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
+Dec 10, 2018 11:52:05 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
+INFO: closing Statement
