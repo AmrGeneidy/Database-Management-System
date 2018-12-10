@@ -14,6 +14,9 @@ public class SQLDatabase implements Database {
 
 	private String currentDatabasePath;
 	private String workSpace;
+	private String[] colNames1;
+	private String[] colTypes1;
+	private Table table;
 
 	public SQLDatabase() {
 
@@ -22,7 +25,7 @@ public class SQLDatabase implements Database {
 	public SQLDatabase(String path) {
 		workSpace = path;
 	}
-
+	
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		databaseName = databaseName.toLowerCase();
@@ -102,7 +105,6 @@ public class SQLDatabase implements Database {
 		Parser parser = new Parser();
 		parser.executeQuery(query);
 		HashMap<returnType, Object> data = parser.map;
-		Table table = null;
 		
 		try {
 			table = Table.loadNewTable(currentDatabasePath + System.getProperty("file.separator")
@@ -120,7 +122,8 @@ public class SQLDatabase implements Database {
 		String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
 		String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
 		ArrayList<Record> contents = table.getTableData();
-
+		
+		
 		int value = 0;
 		int actualRows = 0;
 		int actualcolumns = 0;
@@ -236,7 +239,7 @@ public class SQLDatabase implements Database {
 			}
 			for (int j = 0; j < contents.size(); j++) {
 
-				for (int i = 1, k = 0; i < contents.get(0).length(); i += 2, k++) {
+				for (int k = 0; k < contents.get(0).length(); k++) {
 					for (int v = 0; v < columnsArray.length; v++) {
 						String s = colNames[k];
 						if (s.equalsIgnoreCase(columnsArray[v])) {
@@ -244,6 +247,7 @@ public class SQLDatabase implements Database {
 								actualcolumns++;
 							}
 							checkColumn[k] = 1;
+							
 							break;
 						}
 					}
@@ -252,6 +256,9 @@ public class SQLDatabase implements Database {
 		}
 
 		selected = new Object[actualRows][actualcolumns];
+		colTypes1 = new String[actualcolumns];
+		colNames1 = new String[actualcolumns];
+		
 		int c = 0;
 		boolean flag = false;
 		for (int j = 0; j < contents.size(); j++) {
@@ -269,10 +276,13 @@ public class SQLDatabase implements Database {
 						if (isNum) {
 							value = Integer.parseInt(oneRow.getItem(k));
 							selected[c][g] = value;
+							colTypes1[g] = "int"; 
+							colNames1[g] = table.getColsNames()[k];
 						} else {
 							selected[c][g] = oneRow.getItem(k);
+							colTypes1[g] = "varchar";
+							colNames1[g] = table.getColsNames()[k];
 						}
-
 						g++;
 					}
 					flag = true;
@@ -283,7 +293,9 @@ public class SQLDatabase implements Database {
 			}
 		}
 
+		
 		return selected;
+		
 	}
 
 	@Override
@@ -296,7 +308,7 @@ public class SQLDatabase implements Database {
 		HashMap<returnType, Object> map = parser.map;
 		String xmlPath = currentDatabasePath + System.getProperty("file.separator")
 				+ ((String) map.get(returnType.NAME)).toLowerCase() + ".xml";
-		Table table = Table.loadNewTable(xmlPath);
+		table = Table.loadNewTable(xmlPath);
 		if ((boolean) map.get(returnType.ISINSERT)) {
 			rowsCount = table.insert(map);
 
@@ -312,19 +324,23 @@ public class SQLDatabase implements Database {
 
 	@Override
 	public String getTableName() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return table.getTableName();
 	}
 
 	@Override
 	public String[] getColTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		return colTypes1;
 	}
 
 	@Override
 	public String[] getColName() {
+		return colNames1;
+	}
+
+	@Override
+	public Database getDatabase() {
 		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 }
