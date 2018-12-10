@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
 public class SQLDatabase implements Database {
 
 	private String currentDatabasePath;
@@ -25,7 +24,7 @@ public class SQLDatabase implements Database {
 	public SQLDatabase(String path) {
 		workSpace = path;
 	}
-	
+
 	@Override
 	public String createDatabase(String databaseName, boolean dropIfExists) {
 		databaseName = databaseName.toLowerCase();
@@ -63,7 +62,7 @@ public class SQLDatabase implements Database {
 			if (workSpace != null) {
 				path = workSpace + System.getProperty("file.separator")
 						+ ((String) map.get(returnType.NAME)).toLowerCase();
-			}else
+			} else
 				path = ((String) map.get(returnType.NAME)).toLowerCase();
 			handler.createDatabase(path);
 			currentDatabasePath = path;
@@ -73,7 +72,7 @@ public class SQLDatabase implements Database {
 			if (workSpace != null) {
 				path = workSpace + System.getProperty("file.separator")
 						+ ((String) map.get(returnType.NAME)).toLowerCase();
-			}else
+			} else
 				path = ((String) map.get(returnType.NAME)).toLowerCase();
 			handler.deleteDatabase(path);
 			return true;
@@ -105,7 +104,7 @@ public class SQLDatabase implements Database {
 		Parser parser = new Parser();
 		parser.executeQuery(query);
 		HashMap<returnType, Object> data = parser.map;
-		
+
 		try {
 			table = Table.loadNewTable(currentDatabasePath + System.getProperty("file.separator")
 					+ ((String) data.get(returnType.NAME)).toLowerCase() + ".xml");
@@ -122,8 +121,7 @@ public class SQLDatabase implements Database {
 		String[] conditionOperands = (String[]) data.get(returnType.CONDITIONOPERANDS);
 		String conditionOprtator = (String) data.get(returnType.CONDITIONOPERATOR);
 		ArrayList<Record> contents = table.getTableData();
-		
-		
+
 		int value = 0;
 		int actualRows = 0;
 		int actualcolumns = 0;
@@ -247,7 +245,7 @@ public class SQLDatabase implements Database {
 								actualcolumns++;
 							}
 							checkColumn[k] = 1;
-							
+
 							break;
 						}
 					}
@@ -258,7 +256,7 @@ public class SQLDatabase implements Database {
 		selected = new Object[actualRows][actualcolumns];
 		colTypes1 = new String[actualcolumns];
 		colNames1 = new String[actualcolumns];
-		
+
 		int c = 0;
 		boolean flag = false;
 		for (int j = 0; j < contents.size(); j++) {
@@ -276,7 +274,7 @@ public class SQLDatabase implements Database {
 						if (isNum) {
 							value = Integer.parseInt(oneRow.getItem(k));
 							selected[c][g] = value;
-							colTypes1[g] = "int"; 
+							colTypes1[g] = "int";
 							colNames1[g] = table.getColsNames()[k];
 						} else {
 							selected[c][g] = oneRow.getItem(k);
@@ -293,9 +291,8 @@ public class SQLDatabase implements Database {
 			}
 		}
 
-		
 		return selected;
-		
+
 	}
 
 	@Override
@@ -324,7 +321,6 @@ public class SQLDatabase implements Database {
 
 	@Override
 	public String getTableName() {
-		
 		return table.getTableName();
 	}
 
@@ -336,11 +332,5 @@ public class SQLDatabase implements Database {
 	@Override
 	public String[] getColName() {
 		return colNames1;
-	}
-
-	@Override
-	public Database getDatabase() {
-		// TODO Auto-generated method stub
-		return this;
 	}
 }
