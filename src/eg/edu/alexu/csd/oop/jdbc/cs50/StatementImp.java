@@ -155,7 +155,19 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		checkIfTimeout();
 		// TODO: handle return
-		return database.executeStructureQuery(sql);
+		if (sql.toUpperCase().contains("CREATE") || sql.toUpperCase().contains("DROP")) {
+			return database.executeStructureQuery(sql);
+		} else if (sql.toUpperCase().contains("SELECT")) {
+			Object [][] x = database.executeQuery(sql);
+			return x.length != 0;
+			
+		} else if (sql.toUpperCase().contains("INSERT") || sql.toUpperCase().contains("DELETE") || sql.toUpperCase().contains("UPDATE")) {
+			int x =database.executeUpdateQuery(sql);
+			return x != 0;
+		} else {
+			throw new SQLException("Invalid Query!!");
+		}
+		
 	}
 
 	@Override
