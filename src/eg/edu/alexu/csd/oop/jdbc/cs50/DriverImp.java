@@ -80,10 +80,7 @@ public class DriverImp implements Driver {
 	@Override
 	public Logger getParentLogger() throws SQLFeatureNotSupportedException {
 		throw new UnsupportedOperationException();
-	}
 
-	public String getWorkSpace() {
-		return info.getProperty("path");
 	}
 
 }
