@@ -1,5 +1,6 @@
 package eg.edu.alexu.csd.oop.jdbc.cs50;
 
+import java.awt.TextArea;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -9,6 +10,8 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Properties;
 
+import javax.swing.JPanel;
+
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 
 
 public class Main extends Application {
@@ -26,7 +30,8 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.setResizable(false);
         primaryStage.show();
-
+        
+        
         Driver driver = new DriverImp();
         Properties info = new Properties();
         File dbDir = new File("workspace");
