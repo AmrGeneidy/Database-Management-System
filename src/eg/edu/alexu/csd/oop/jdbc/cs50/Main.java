@@ -6,8 +6,10 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -31,12 +33,19 @@ public class Main extends Application {
         Properties info = new Properties();
         File dbDir = new File("workspace");
         info.put("path", dbDir.getAbsoluteFile());
-        Connection connection;
+        Connection connection = null;
         try {
             connection = driver.connect("jdbc:xmldb://localhost", info);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        Controller.setStatement(statement);
     }
 
     public static void main(String[] args) {

@@ -13,8 +13,8 @@
       <Pane prefHeight="471.0" prefWidth="743.0" style="-fx-background-color: #1C2833;">
          <children>
             <TextArea fx:id="console" layoutX="41.0" layoutY="46.0" prefHeight="237.0" prefWidth="396.0" />
-            <TextArea fx:id="logger" layoutX="41.0" layoutY="316.0" prefHeight="129.0" prefWidth="396.0" style="-fx-background-color: #000000;" />
-            <Label layoutX="41.0" layoutY="293.0" style="-fx-background-color: #1C2833; -fx-font-weight: bold;" text="Logging" textFill="#239b56">
+            <TextArea fx:id="logger" editable="false" layoutX="41.0" layoutY="316.0" prefHeight="129.0" prefWidth="396.0" style="-fx-background-color: #000000;" />
+            <Label layoutX="41.0" layoutY="293.0" style="-fx-background-color: #1C2833; -fx-font-weight: bold;" text="Log" textFill="#239b56">
                <font>
                   <Font name="Bank Gothic Medium BT" size="16.0" />
                </font>
@@ -40,7 +40,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Button fx:id="addBatch" layoutX="172.0" layoutY="300.0" minWidth="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" style="-fx-border-radius: 20; -fx-background-color: #2E86C1;" text="ADD" textFill="#1C2833">
+                  <Button fx:id="addBatch" layoutX="172.0" layoutY="300.0" minWidth="46.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="46.0" style="-fx-border-radius: 20; -fx-background-color: #2E86C1;" text="ADD" textFill="#1C2833">
                      <font>
                         <Font name="Bank Gothic Medium BT" size="10.0" />
                      </font></Button>

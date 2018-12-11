@@ -1,204 +1,24 @@
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO * table_name2(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INS ERT INTO table_name3(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name4(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name4 SET column_name1=='1111111111', COLUMN_NAME2=2222222, column_name3='333333333'
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name6(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name6 SET column_name1='1111111111', COLUMN_NAME2=2222222, column_name3='333333333
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name7(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO ta.ble_name9(column_NAME1, COLUMN_name3, column_name.2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name10(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERt INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_name1, COLUMN_NAME3, column_NAME2) VAlUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_namE1 SET column_name1='11111111', COLUMN_NAME2=22222222, column_name3='333333333' WHERE coLUmn_NAME3='VALUE3'
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name1 SET column_name1='11111111', COLUMN_NAME2=22222222, column_name3='333333333' WHERE coLUmn_NAME3='VALUE3'
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name2(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name2(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name2(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 6)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : DELETE From table_name2  WHERE coLUmn_NAME1='VAluE1'
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name2 SET column_name1='11111111', COLUMN_NAME2=22222222, column_name3='333333333' WHERE coLUmn_NAME2=4
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name1(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 6)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : DELETE From table_name1  WHERE coLUmn_NAME2=4
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeQuery
-INFO: executing query : SELECT * FROM table_name1 WHERE coluMN_NAME2 < 6
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name1 SET column_name1='11111111', COLUMN_NAME2=10, column_name3='333333333' WHERE coLUmn_NAME2=5
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeQuery
-INFO: executing query : SELECT * FROM table_name1 WHERE coluMN_NAME2 > 4
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_NAME1, column_name2, COLUMN_name3) VALUES ('value1', 4, 'value3')
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeQuery
-INFO: executing query : SELECT column_name1 FROM table_name13 WHERE coluMN_NAME2 < 5
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name8(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name8(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name8(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name8 SET column_name1='11111111', COLUMN_NAME2=22222222, column_name3='333333333' WHERE coLUmn_NAME3='VALUE3'
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:26 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name13(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name9 SET column_name1='value1', column_name2=15, column_name3='value2'
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE wrong_table_name9 SET column_name1='value1', column_name2=15, column_name3='value2'
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name3 VALUES ('value1', 3,'value3')
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name10(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name10(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name10(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : DELETE From table_name10
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name4(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name12(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name12(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name12(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name12(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value5', 'value6', 6)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeQuery
-INFO: executing query : SELECT * From table_name12
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name7(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name7(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name7(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : UPDATE table_name7 SET column_name1='1111111111', COLUMN_NAME2=2222222, column_name3='333333333'
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name6(column_name1, column_name2) VALUES ('value1', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name5(invalid_column_name1, column_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name11(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name11(column_NAME1, COLUMN_name3, column_name2) VALUES ('value1', 'value3', 4)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : INSERT INTO table_name11(column_name1, COLUMN_NAME3, column_NAME2) VALUES ('value2', 'value4', 5)
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp executeUpdate
-INFO: executing modify query : DELETE From table_name11  WHERE coLUmn_NAME3='VAluE3'
-œÌ” 11, 2018 5:37:27 „ eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp close
-INFO: Statement is closed properly
+Dec 11, 2018 10:56:07 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:07 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+INFO: adding query to batch : 
+Dec 11, 2018 10:56:09 PM eg.edu.alexu.csd.oop.jdbc.cs50.StatementImp addBatch
+SEVERE: NOT INSERT or UPDATE Query : 

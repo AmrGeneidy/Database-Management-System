@@ -10,6 +10,7 @@ import eg.edu.alexu.csd.oop.db.Database;
 public class ResultSetBuilder {
 	private Database db;
 	private String query;
+
 	private Statement statement;
 	
 	public void setStatement(Statement statement) {
