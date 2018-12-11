@@ -18,11 +18,13 @@ import java.sql.Struct;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.db.Database;
 
 public class ConnectionImp implements Connection {
-
+	
+	private Logger logger = Log.getLoggeer();
 	private Database database;
 	private Properties info;
 	private boolean isClosed;
@@ -35,8 +37,25 @@ public class ConnectionImp implements Connection {
 
 	private void checkIfClosed() throws SQLException {
 		if (isClosed) {
+			logger.severe("Connection is closed!!");
 			throw new SQLException("This statement is closed!!");
 		}
+	}
+	
+	@Override
+	public Statement createStatement() throws SQLException {
+		checkIfClosed();
+		logger.info("Creating statement");
+		Statement x = new StatementImp(this,this.database);
+		return x;
+	}
+	
+	@Override
+	public void close() throws SQLException {
+		this.database = null;
+		this.info = null;
+		this.isClosed = true;
+		logger.info("Connection is closed successfully");
 	}
 	
 	@Override
@@ -49,13 +68,6 @@ public class ConnectionImp implements Connection {
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		throw new UnsupportedOperationException();
 
-	}
-
-	@Override
-	public Statement createStatement() throws SQLException {
-		checkIfClosed();
-		Statement x = new StatementImp(this,this.database);
-		return x;
 	}
 
 	@Override
@@ -98,13 +110,6 @@ public class ConnectionImp implements Connection {
 	public void rollback() throws SQLException {
 		throw new UnsupportedOperationException();
 
-	}
-
-	@Override
-	public void close() throws SQLException {
-		this.database = null;
-		this.info = null;
-		this.isClosed = true;
 	}
 
 	@Override

@@ -16,10 +16,11 @@ import eg.edu.alexu.csd.oop.db.cs28.SQLDatabase;
 public class DriverImp implements Driver {
 	
 	private Properties info;
-	
-	//TODO  we must support Class.forName("foo.bah.Driver")
+	private Logger logger = Log.getLoggeer();
+
 	@Override
 	public Connection connect(String url, Properties info) throws SQLException {
+		logger.info("connecting");
 		if (acceptsURL(url)) {
 			this.info = info;
 			File dir = (File) info.get("path");
@@ -27,6 +28,7 @@ public class DriverImp implements Driver {
 			Database database = new SQLDatabase(path);
 			return new ConnectionImp(database, info);
 		} else {
+			logger.severe("Couldn't connect to database !!");
 			throw new SQLException("Couldn't connect to database !!");
 		}
 
@@ -34,6 +36,7 @@ public class DriverImp implements Driver {
 
 	@Override
 	public boolean acceptsURL(String url) throws SQLException {
+		logger.info("checking the URL");
 		if (url.equalsIgnoreCase("jdbc:xmldb://localhost"))
 			return true;
 		else
@@ -43,6 +46,7 @@ public class DriverImp implements Driver {
 	@Override
 	public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
 		try {
+			logger.info("getting Property Info");
 			if (acceptsURL(url)) {
 				DriverPropertyInfo[] x = new DriverPropertyInfo[info.size()];
 			    Enumeration<?> e = info.propertyNames();
@@ -52,9 +56,11 @@ public class DriverImp implements Driver {
 				}
 				return x;
 			} else {
+				logger.severe("Couldn't connect to database !!");
 				throw new SQLException("Couldn't connect to database !!");
 			}
 		} catch (Exception e) {
+			logger.severe("Couldn't get Driver Property Info !!");
 			throw new SQLException("Couldn't get Driver Property Info !!");
 		}
 		
