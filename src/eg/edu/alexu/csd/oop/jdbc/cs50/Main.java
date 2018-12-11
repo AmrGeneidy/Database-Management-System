@@ -1,4 +1,4 @@
-package eg.edu.alexu.csd.oop.db.cs28;
+package eg.edu.alexu.csd.oop.jdbc.cs50;
 
 import java.io.IOException;
 import javafx.application.Application;
@@ -14,6 +14,7 @@ public class Main extends Application {
 		Parent root = FXMLLoader.load(getClass().getResource("MainDesign.fxml"));
         primaryStage.setTitle("JDBC");
         primaryStage.setScene(new Scene(root));
+        primaryStage.setResizable(false);
         primaryStage.show();
 	}
 	

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -8,8 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="eg.edu.alexu.csd.oop.db.cs28.Controller">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eg.edu.alexu.csd.oop.jdbc.cs50.Controller">
    <children>
       <Pane prefHeight="471.0" prefWidth="743.0" style="-fx-background-color: #1C2833;">
          <children>
@@ -22,7 +22,7 @@
             </Label>
             <Pane layoutX="477.0" layoutY="-13.0" prefHeight="523.0" prefWidth="286.0" style="-fx-border-color: #239B56; -fx-border-width: 2;">
                <children>
-                  <ComboBox layoutX="68.0" layoutY="210.0" prefWidth="150.0" promptText="Select Database" style="-fx-background-color: #239b56; -fx-background-radius: 15;" />
+                  <ComboBox layoutX="68.0" layoutY="210.0" prefWidth="150.0" promptText="Select Database" style="-fx-background-color: #2E86C1; -fx-background-radius: 15;" />
                   <Label layoutX="62.0" layoutY="46.0" text="JDBC" textFill="#239b56">
                      <font>
                         <Font name="Bank Gothic Medium BT" size="47.0" />
@@ -42,6 +42,10 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
+                  <Button layoutX="172.0" layoutY="300.0" minWidth="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" style="-fx-border-radius: 20; -fx-background-color: #2E86C1;" text="ADD" textFill="#ECF0F1">
+                     <font>
+                        <Font name="Bank Gothic Medium BT" size="10.0" />
+                     </font></Button>
                </children>
             </Pane>
             <Label layoutX="46.0" layoutY="18.0" style="-fx-background-color: #1C2833; -fx-font-weight: bold;" text="console" textFill="#239b56">
