@@ -18,6 +18,7 @@ public class StatementImp implements Statement {
 	private Database database;
 	private Connection connection;
 	private List<String> batch;
+	private ResultSet currentResultSet; 
 	private boolean isClosed;
 	private int timeout = 0;
 
@@ -51,8 +52,8 @@ public class StatementImp implements Statement {
 		database.executeQuery(sql);
 		ResultSetMetaDataImp resultMetaData = new ResultSetMetaDataImp(database.getTableName(),
 				database.getColName(), this.database.getColTypes());
-		ResultSet result = new ResultsetImp(database.executeQuery(sql) , resultMetaData, this);
-		return result;
+		currentResultSet = new ResultsetImp(database.executeQuery(sql) , resultMetaData, this);
+		return currentResultSet;
 	}
 
 	@Override
@@ -69,6 +70,9 @@ public class StatementImp implements Statement {
 		connection = null;
 		batch.clear();
 		batch = null;
+		if (currentResultSet != null) {
+			currentResultSet.close();
+		}
 		isClosed = true;
 		logger.info("Statement is closed successfully");
 
@@ -107,7 +111,7 @@ public class StatementImp implements Statement {
 			return x.length != 0;
 		} else if (sql.toUpperCase().contains("INSERT") || sql.toUpperCase().contains("DELETE") || sql.toUpperCase().contains("UPDATE")) {
 			logger.info("executing modify query : " + sql);
-			int x =database.executeUpdateQuery(sql);
+			int x = database.executeUpdateQuery(sql);
 			return x != 0;
 		} else {
 			logger.severe("Invalid Query : " + sql);
@@ -134,7 +138,7 @@ public class StatementImp implements Statement {
 	@Override
 	public void clearBatch() throws SQLException {
 		checkIfClosed();
-		logger.info("Tring to clear batch");
+		logger.info("clearing batch");
 		batch.clear();
 		logger.info("Batch has been cleared successfully");
 	}
@@ -143,7 +147,7 @@ public class StatementImp implements Statement {
 	public int[] executeBatch() throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
-		logger.info("Tring to execute Batch");
+		logger.info("executing Batch");
 		int[] numOfUpdatedRecordsInEachQuery = new int[batch.size()];
 		for (int i = 0; i < numOfUpdatedRecordsInEachQuery.length; i++) {
 			try {

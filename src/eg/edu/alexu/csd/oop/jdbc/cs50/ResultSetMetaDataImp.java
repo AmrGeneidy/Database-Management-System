@@ -3,8 +3,11 @@ package eg.edu.alexu.csd.oop.jdbc.cs50;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.logging.Logger;
 
 public class ResultSetMetaDataImp implements ResultSetMetaData {
+	
+	private Logger logger = Log.getLoggeer();
 	private String tableName;
 	private String[] colName;
 	private String[] colType;
@@ -13,6 +16,51 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 		this.tableName = tableName;
 		this.colName = colName;
 		this.colType = colType;
+	}
+	
+	@Override
+	public int getColumnCount() throws SQLException {
+		logger.info("getting column count");
+		return colName.length;
+	}
+	
+	@Override
+	public String getColumnLabel(int column) throws SQLException {
+		logger.info("getting column label");
+		return colName[column - 1];
+	}
+
+	@Override
+	public String getColumnName(int column) throws SQLException {
+		logger.info("getting column name");
+		return colName[column - 1];
+	}
+	
+	@Override
+	public String getTableName(int column) throws SQLException {
+		logger.info("getting table name");
+		return tableName;
+	}
+	
+	@Override
+	public int getColumnType(int column) throws SQLException {
+		logger.info("getting column type");
+		switch (colName[column]) {
+		case "int":
+			logger.info("type is integer");
+			return Types.INTEGER;
+		case "varchar":
+			logger.info("type is varChar");
+			return Types.VARCHAR;
+		}
+		logger.warning("couldn't determine the type!!");
+		return 0;
+	}
+
+	@Override
+	public String getColumnTypeName(int column) throws SQLException {
+		logger.info("getting column type name");
+		return colType[column];
 	}
 
 	@Override
@@ -23,12 +71,6 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 	@Override
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int getColumnCount() throws SQLException {
-		// TODO Auto-generated method stub
-		return colName.length;
 	}
 
 	@Override
@@ -67,18 +109,6 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 	}
 
 	@Override
-	public String getColumnLabel(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		return colName[column - 1];
-	}
-
-	@Override
-	public String getColumnName(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		return colName[column - 1];
-	}
-
-	@Override
 	public String getSchemaName(int column) throws SQLException {
 		throw new UnsupportedOperationException();
 	}
@@ -94,32 +124,8 @@ public class ResultSetMetaDataImp implements ResultSetMetaData {
 	}
 
 	@Override
-	public String getTableName(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		return tableName;
-	}
-
-	@Override
 	public String getCatalogName(int column) throws SQLException {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public int getColumnType(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		switch (colName[column]) {
-		case "int":
-			return Types.INTEGER;
-		case "varchar":
-			return Types.VARCHAR;
-		}
-		return 0;
-	}
-
-	@Override
-	public String getColumnTypeName(int column) throws SQLException {
-		// TODO Auto-generated method stub
-		return colType[column];
 	}
 
 	@Override
