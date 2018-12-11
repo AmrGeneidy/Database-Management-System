@@ -33,13 +33,13 @@ public class Controller {
     			event -> {
     				String s = event.getText();
     				if (s.equals("\r")) {
-    					query = console.getText().substring(begin, console.getText().length());
+    					String[] lines = console.getText().split("\\n");
+    					query = lines[0];
     					begin = console.getText().length() + 1;
     					if (query.equalsIgnoreCase("clear")) {
     						console.setText(null);
     						begin = 0;
     					} else {
-    						
     						try {
     							database.executeQuery(query);
     							if(query.toLowerCase().contains("select")) {
@@ -54,7 +54,6 @@ public class Controller {
     								begin = console.getText().length() + 1;
     								
     							}
-    							
     						} catch (Exception e) {
     							// TODO: handle exception
     							if(e.getMessage().equals(null)) {
