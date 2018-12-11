@@ -21,7 +21,7 @@ public class Controller {
 	public TextArea logger = new TextArea();
 	public TextArea batch = new TextArea();
 	public Button addBatch = new Button();
-	
+	int counter = 0;
 	KeyEvent arg0;
 	
 	
@@ -29,6 +29,7 @@ public class Controller {
     public void consoleEditor() {
     	
     	console.setOnKeyPressed(
+    			
     			event -> {
     				String s = event.getText();
     				if (s.equals("\r")) {
@@ -65,6 +66,7 @@ public class Controller {
     							begin = console.getText().length() + 1;
     							
     						}
+    						
 
     					}
 
