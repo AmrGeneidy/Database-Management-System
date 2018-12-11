@@ -10,11 +10,11 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eg.edu.alexu.csd.oop.jdbc.cs50.Controller">
    <children>
-      <Pane prefHeight="471.0" prefWidth="743.0" style="-fx-background-color: #1C2833;">
+      <Pane fx:id="panel" prefHeight="471.0" prefWidth="743.0" style="-fx-background-color: #1C2833;">
          <children>
-            <TextArea fx:id="console" layoutX="41.0" layoutY="46.0" prefHeight="237.0" prefWidth="396.0" />
-            <TextArea fx:id="logger" editable="false" layoutX="41.0" layoutY="316.0" prefHeight="129.0" prefWidth="396.0" style="-fx-background-color: #000000;" />
-            <Label layoutX="41.0" layoutY="293.0" style="-fx-background-color: #1C2833; -fx-font-weight: bold;" text="Log" textFill="#239b56">
+            <TextArea fx:id="console" layoutX="41.0" layoutY="46.0" onKeyPressed="#consoleEditor" prefHeight="237.0" prefWidth="396.0" />
+            <TextArea fx:id="logger" layoutX="41.0" layoutY="316.0" prefHeight="129.0" prefWidth="396.0" style="-fx-background-color: #000000;" />
+            <Label layoutX="41.0" layoutY="293.0" style="-fx-background-color: #1C2833; -fx-font-weight: bold;" text="Logging" textFill="#239b56">
                <font>
                   <Font name="Bank Gothic Medium BT" size="16.0" />
                </font>

@@ -49,11 +49,11 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		checkIfTimeout();
 		logger.info("executing query : " + sql);
-		database.executeQuery(sql);
-		ResultSetMetaDataImp resultMetaData = new ResultSetMetaDataImp(database.getTableName(),
-				database.getColName(), this.database.getColTypes());
-		currentResultSet = new ResultsetImp(database.executeQuery(sql) , resultMetaData, this);
-		return currentResultSet;
+		ResultSetBuilder builder = new ResultSetBuilder();
+		builder.setDb(database);
+		builder.setQuery(sql);
+		builder.setStatement(this);
+		return builder.build();
 	}
 
 	@Override
