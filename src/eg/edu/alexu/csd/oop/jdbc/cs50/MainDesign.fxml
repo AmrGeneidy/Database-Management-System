@@ -42,7 +42,7 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Button layoutX="172.0" layoutY="300.0" minWidth="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" style="-fx-border-radius: 20; -fx-background-color: #2E86C1;" text="ADD" textFill="#ECF0F1">
+                  <Button layoutX="172.0" layoutY="300.0" minWidth="46.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="46.0" style="-fx-border-radius: 20; -fx-background-color: #2E86C1;" text="ADD" textFill="#1C2833">
                      <font>
                         <Font name="Bank Gothic Medium BT" size="10.0" />
                      </font></Button>
