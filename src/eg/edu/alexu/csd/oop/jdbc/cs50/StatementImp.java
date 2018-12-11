@@ -8,15 +8,13 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import eg.edu.alexu.csd.oop.db.Database;
-import sun.util.logging.resources.logging;
 
-//TODO need revision
 public class StatementImp implements Statement {
-
+	
+	private Logger logger = Log.getLoggeer();
 	private Database database;
 	private Connection connection;
 	private List<String> batch;
@@ -32,6 +30,7 @@ public class StatementImp implements Statement {
 
 	private void checkIfClosed() throws SQLException {
 		if (isClosed) {
+			logger.severe("Statement is closed!!");
 			throw new SQLException("This statement is closed!!");
 		}
 	}
@@ -45,21 +44,10 @@ public class StatementImp implements Statement {
 	}
 
 	@Override
-	public <T> T unwrap(Class<T> iface) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public boolean isWrapperFor(Class<?> iface) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
 	public ResultSet executeQuery(String sql) throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
+		logger.info("executing query : " + sql);
 		database.executeQuery(sql);
 		ResultSetMetaDataImp resultMetaData = new ResultSetMetaDataImp(database.getTableName(),
 				database.getColName(), this.database.getColTypes());
@@ -71,52 +59,25 @@ public class StatementImp implements Statement {
 	public int executeUpdate(String sql) throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
+		logger.info("executing modify query : " + sql);
 		return this.database.executeUpdateQuery(sql);
 	}
 
 	@Override
 	public void close() throws SQLException {
-		Logger logger = Log.getLoggeer();
-		logger.info("closing Statement");
 		database = null;
 		connection = null;
+		batch.clear();
 		batch = null;
 		isClosed = true;
-	}
-
-	@Override
-	public int getMaxFieldSize() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void setMaxFieldSize(int max) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getMaxRows() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void setMaxRows(int max) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void setEscapeProcessing(boolean enable) throws SQLException {
-		throw new UnsupportedOperationException();
+		logger.info("Statement is closed successfully");
 
 	}
 
 	@Override
 	public int getQueryTimeout() throws SQLException {
 		checkIfClosed();
+		logger.info("Get Query Timeout limit");
 		return timeout;
 	}
 
@@ -125,33 +86,11 @@ public class StatementImp implements Statement {
 		checkIfClosed();
 		// 0 seconds for no timeout limit
 		if (seconds < 0) {
+			logger.severe("Couldn't Set Timeout limit !!");
 			throw new SQLException("Couldn't Set Timeout limit !!");
 		}
 		timeout = seconds;
-
-	}
-
-	@Override
-	public void cancel() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public SQLWarning getWarnings() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void clearWarnings() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void setCursorName(String name) throws SQLException {
-		throw new UnsupportedOperationException();
+		logger.info("Query timeout has been set properly");
 
 	}
 
@@ -159,83 +98,35 @@ public class StatementImp implements Statement {
 	public boolean execute(String sql) throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
-		// TODO: handle return
 		if (sql.toUpperCase().contains("CREATE") || sql.toUpperCase().contains("DROP")) {
+			logger.info("executing structure query : " + sql);
 			return database.executeStructureQuery(sql);
 		} else if (sql.toUpperCase().contains("SELECT")) {
+			logger.info("executing query : " + sql);
 			Object [][] x = database.executeQuery(sql);
 			return x.length != 0;
-			
 		} else if (sql.toUpperCase().contains("INSERT") || sql.toUpperCase().contains("DELETE") || sql.toUpperCase().contains("UPDATE")) {
+			logger.info("executing modify query : " + sql);
 			int x =database.executeUpdateQuery(sql);
 			return x != 0;
 		} else {
+			logger.severe("Invalid Query : " + sql);
 			throw new SQLException("Invalid Query!!");
 		}
 		
 	}
 
 	@Override
-	public ResultSet getResultSet() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getUpdateCount() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public boolean getMoreResults() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public void setFetchDirection(int direction) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getFetchDirection() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setFetchSize(int rows) throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getFetchSize() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getResultSetConcurrency() throws SQLException {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public int getResultSetType() throws SQLException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public void addBatch(String sql) throws SQLException {
 		checkIfClosed();
+		logger.info("adding query to batch : " + sql);
 		boolean containsInsert = sql.toLowerCase().contains("insert");
 		boolean containsUpdate = sql.toLowerCase().contains("update");
-		// TODO done
 		if (containsInsert || containsUpdate) {
 			batch.add(sql);
+			logger.info("Query has been added : " + sql);
 		} else {
+			logger.severe("NOT INSERT or UPDATE Query : " + sql);
 			throw new SQLException("INSERT or UPDATE SQL statements only !!");
 		}
 	}
@@ -243,28 +134,34 @@ public class StatementImp implements Statement {
 	@Override
 	public void clearBatch() throws SQLException {
 		checkIfClosed();
+		logger.info("Tring to clear batch");
 		batch.clear();
+		logger.info("Batch has been cleared successfully");
 	}
 
 	@Override
 	public int[] executeBatch() throws SQLException {
 		checkIfClosed();
 		checkIfTimeout();
+		logger.info("Tring to execute Batch");
 		int[] numOfUpdatedRecordsInEachQuery = new int[batch.size()];
-		//TODO someone check if this is works
 		for (int i = 0; i < numOfUpdatedRecordsInEachQuery.length; i++) {
 			try {
 				numOfUpdatedRecordsInEachQuery[i] = database.executeUpdateQuery(batch.get(i));
+				logger.info("query executed successfully : " + batch.get(i));
 			} catch (SQLException e) {
 				numOfUpdatedRecordsInEachQuery[i] = EXECUTE_FAILED;
+				logger.severe("query failed to execute : " + batch.get(i));
 			}
 		}
+		logger.info("execute batch finished");
 		return numOfUpdatedRecordsInEachQuery;
 	}
 
 	@Override
 	public Connection getConnection() throws SQLException {
 		checkIfClosed();
+		logger.info("getting connection");
 		return this.connection;
 	}
 
@@ -351,5 +248,126 @@ public class StatementImp implements Statement {
 		throw new UnsupportedOperationException();
 
 	}
+	
+	@Override
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+	
+	@Override
+	public int getMaxFieldSize() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void setMaxFieldSize(int max) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getMaxRows() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void setMaxRows(int max) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void setEscapeProcessing(boolean enable) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+
+	@Override
+	public void cancel() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public SQLWarning getWarnings() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void clearWarnings() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void setCursorName(String name) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public ResultSet getResultSet() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getUpdateCount() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public boolean getMoreResults() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public void setFetchDirection(int direction) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getFetchDirection() throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setFetchSize(int rows) throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getFetchSize() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getResultSetConcurrency() throws SQLException {
+		throw new UnsupportedOperationException();
+
+	}
+
+	@Override
+	public int getResultSetType() throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+
 
 }
