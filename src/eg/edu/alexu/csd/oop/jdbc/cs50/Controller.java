@@ -27,6 +27,11 @@ public class Controller {
 
     @FXML
     void add() {
+        try {
+            statement.clearBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         for (String line : batch.getText().split("\\n")) {
             try {
                 statement.addBatch(line);
@@ -35,6 +40,11 @@ public class Controller {
             }
         }
         loggerUpdate();
+        try {
+            statement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     static void setStatement(Statement st) {
